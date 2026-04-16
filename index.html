@@ -10,7 +10,7 @@
     
     <style>
         :root { --space: #05070a; --gold: #FFD700; --text: #f1f5f9; --dim: #94a3b8; }
-        body { background: var(--space); color: var(--text); font-family: 'Inter', system-ui, sans-serif; margin: 0; line-height: 1.6; }
+        body { background: var(--space); color: var(--text); font-family: 'Inter', system-ui, sans-serif; margin: 0; line-height: 1.6; overflow-x: hidden; }
         
         h1, h2 { letter-spacing: 0.1em; color: var(--gold); text-transform: uppercase; }
         .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
@@ -23,7 +23,7 @@
         #music-control { position: absolute; top: 20px; right: 20px; z-index: 100; }
         .music-btn { background: none; border: 1px solid var(--gold); color: var(--gold); padding: 8px 15px; cursor: pointer; border-radius: 4px; font-size: 0.8rem; transition: 0.3s; }
         .music-btn:hover { background: var(--gold); color: var(--space); }
-        #sc-player { display: none; margin-top: 10px; border-radius: 8px; border: 1px solid #1e293b; }
+        #sc-player-container { display: none; margin-top: 10px; border-radius: 8px; border: 1px solid #1e293b; overflow: hidden; }
 
         /* Navigation */
         nav { padding: 20px; text-align: center; border-bottom: 1px solid #1e293b; }
@@ -43,8 +43,8 @@
 
 <div id="music-control">
     <button class="music-btn" onclick="toggleMusic()">♪ RESONANCE</button>
-    <div id="sc-player">
-        <audio id="sc-player" src="https://soundcloud.com/enemy-stand-user/yellow-coldplay-slowed?utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing"></audio>
+    <div id="sc-player-container">
+        <iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/11440784&color=%23FFD700&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"></iframe>
     </div>
 </div>
 
@@ -66,7 +66,7 @@
 <div class="container">
     <section>
         <h2>The Complexity Collapse</h2>
-        <p>Complexity is not a resource; it is a debt. By applying <strong>Adèle Ring</strong> valuations, we move directly to geometric alignment. We don't solve the problem; we observe its <strong>Inevitability</strong>.</p>
+        <p>Complexity is not a resource; it is a debt. By applying <strong>Adèle Ring</strong> valuations, we bypass the chronological search for prime factors and move directly to geometric alignment. We don't solve the problem; we observe its <strong>Inevitability</strong>.</p>
         
         <div class="math-block">
             <strong>The Macroscopic Invariant:</strong> 
@@ -96,60 +96,96 @@
 </div>
 
 <script>
-    let angle = 0;
+    let bits = []; 
     let isSnapped = false;
-    let stars = [];
+    let angle = 0;
 
     function toggleMusic() {
-        let player = document.getElementById('sc-player');
+        let player = document.getElementById('sc-player-container');
         player.style.display = player.style.display === 'none' ? 'block' : 'none';
     }
 
     function setup() {
         let canvas = createCanvas(windowWidth, windowHeight * 0.65);
         canvas.parent('stage-container');
-        for(let i=0; i<300; i++) stars.push({x: random(width), y: random(height), size: random(0.5, 2.2), tx: 0, ty: 0});
+        // Quaternary Bit Initialization (0, 1, 2, 3)
+        for(let i=0; i<400; i++) {
+            bits.push({
+                val: floor(random(4)),
+                x: random(width),
+                y: random(height),
+                offset: random(TWO_PI),
+                speed: random(0.01, 0.05),
+                size: random(10, 14),
+                tx: 0, ty: 0
+            });
+        }
     }
 
     function draw() {
         background(5, 7, 12);
+        
         if (!isSnapped) {
             if (mouseIsPressed && mouseY < height) {
                 let target = atan2(mouseY - height/2, mouseX - width/2);
-                angle = lerp(angle, target, 0.08);
+                angle = lerp(angle, target, 0.1);
             }
-            drawStellarNoise(angle);
+            drawDancingNoise(angle);
         } else {
-            drawCrystallization();
+            drawCrystallineSolution();
         }
         drawEulerDial();
     }
 
-    function drawStellarNoise(a) {
+    function drawDancingNoise(a) {
         let diff = abs(a - PI);
         if (diff > PI) diff = abs(diff - TWO_PI);
-        let friction = map(diff, 0, PI, 1, 90);
         
-        fill(255, 200);
+        // Intensity of the RAF jitter
+        let friction = map(diff, 0, PI, 1, 20);
+
+        fill(255, 180);
+        textAlign(CENTER);
         noStroke();
-        stars.forEach(s => {
-            ellipse(s.x + random(-friction, friction), s.y + random(-friction, friction), s.size);
+
+        bits.forEach(b => {
+            // Rhythmic sway representing Residual Arithmetic Friction
+            let danceX = sin(frameCount * b.speed + b.offset) * friction;
+            let danceY = cos(frameCount * b.speed + b.offset) * friction;
+            
+            textSize(b.size);
+            text(b.val, b.x + danceX, b.y + danceY);
         });
 
-        if (diff < 0.05) executeSnap();
+        if (diff < 0.05) executeMarilynFold();
     }
 
-    function executeSnap() {
+    function executeMarilynFold() {
         isSnapped = true;
         angle = PI;
-        for (let i = 0; i < stars.length; i++) {
-            let r = i % 2 === 0 ? 120 : 180; 
-            let theta = map(i, 0, stars.length, 0, TWO_PI);
-            stars[i].tx = width/2 + r * cos(theta);
-            stars[i].ty = height/2 + r * sin(theta);
+        // Crystallization into the P x Q Solution rings
+        for (let i = 0; i < bits.length; i++) {
+            let r = i % 2 === 0 ? 130 : 190; 
+            let theta = map(i, 0, bits.length, 0, TWO_PI);
+            bits[i].tx = width/2 + r * cos(theta);
+            bits[i].ty = height/2 + r * sin(theta);
         }
         document.getElementById('complexity-status').innerHTML = "Entropy: ZERO (O(1))";
         document.getElementById('complexity-status').style.color = "#FFD700";
+    }
+
+    function drawCrystallineSolution() {
+        fill(255, 215, 0, 200); // Coldplay Yellow
+        bits.forEach(b => {
+            // Snap to grounded state: The O(1) transition
+            b.x = lerp(b.x, b.tx, 0.05);
+            b.y = lerp(b.y, b.ty, 0.05);
+            textSize(b.size);
+            text(b.val, b.x, b.y);
+        });
+        
+        textSize(48);
+        text("P × Q = N", width/2, height/2 + 10);
     }
 
     function drawEulerDial() {
@@ -159,19 +195,6 @@
         stroke(isSnapped ? '#FFD700' : 255); strokeWeight(4);
         line(0, 0, 125 * cos(isSnapped ? PI : angle), 125 * sin(isSnapped ? PI : angle));
         pop();
-    }
-
-    function drawCrystallization() {
-        fill(255, 215, 0, 180);
-        noStroke();
-        stars.forEach(s => {
-            s.x = lerp(s.x, s.tx, 0.05);
-            s.y = lerp(s.y, s.ty, 0.05);
-            ellipse(s.x, s.y, s.size * 1.5);
-        });
-        textAlign(CENTER);
-        textSize(48);
-        text("P × Q = N", width/2, height/2);
     }
 </script>
 
