@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>The Pillars | Adelic Transition Engine</title>
+    <title>Enlightenment | Adelic Transition Engine</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
@@ -11,10 +11,10 @@
         nav { padding: 20px; text-align: center; border-bottom: 1px solid #1e293b; }
         nav a { color: var(--text); margin: 0 15px; text-decoration: none; }
         .container { max-width: 900px; margin: 0 auto; padding: 60px 20px; }
-        .pillar { margin-bottom: 100px; padding: 40px; background: #0f172a; border-radius: 12px; border: 1px solid #1e293b; }
-        h2 { color: var(--gold); text-transform: uppercase; margin-top: 0; }
-        .demo-box { height: 200px; width: 100%; background: #05070a; margin: 20px 0; border-radius: 8px; position: relative; overflow: hidden; }
-        pre { background: #05070a; padding: 15px; border-radius: 8px; color: #4ade80; font-size: 0.9rem; }
+        .pillar { margin-bottom: 80px; background: #0f172a; padding: 40px; border-radius: 12px; border: 1px solid #1e293b; }
+        h2 { color: var(--gold); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 0; }
+        .demo-canvas { height: 250px; width: 100%; background: #05070a; border-radius: 8px; margin: 25px 0; overflow: hidden; }
+        pre { background: #05070a; padding: 20px; border-radius: 8px; color: #4ade80; border: 1px solid #1e293b; }
     </style>
 </head>
 <body>
@@ -22,43 +22,29 @@
 <div class="container">
     <section class="pillar">
         <h2>I. Algebra: 2-adic Peeling</h2>
-        <p>Complexity is a fractal tree of choices. Adelic math "peels" the manifold until only the trunk remains.</p>
-        <div id="p-adic-demo" class="demo-box"></div>
+        <p>Complexity is a branching of choices. We "peel" the manifold until only the trunk of truth remains.</p>
+        <div id="peel-demo" class="demo-canvas"></div>
         <script>
             new p5((p) => {
-                p.setup = () => { p.createCanvas(p.select('#p-adic-demo').width, 200).parent('p-adic-demo'); }
+                p.setup = () => { p.createCanvas(p.select('#peel-demo').width, 250).parent('peel-demo'); }
                 p.draw = () => {
-                    p.background(5, 7, 10); p.stroke(255, 50);
-                    let angle = p.map(p.mouseX, 0, p.width, 0, p.PI/2);
-                    p.translate(p.width/2, p.height); p.branch(60, angle);
+                    p.background(5, 7, 10); p.stroke(255, 60); p.translate(p.width/2, p.height);
+                    let a = p.map(p.mouseX, 0, p.width, 0, p.PI/2); p.branch(70, a);
                 }
                 p.branch = (h, a) => {
                     p.line(0,0,0,-h); p.translate(0,-h);
-                    if(h > 10) {
-                        p.push(); p.rotate(a); p.branch(h*0.7, a); p.pop();
-                        p.push(); p.rotate(-a); p.branch(h*0.7, a); p.pop();
-                    }
+                    if(h > 15) { p.push(); p.rotate(a); p.branch(h*0.7, a); p.pop(); p.push(); p.rotate(-a); p.branch(h*0.7, a); p.pop(); }
                 }
-            }, 'p-adic-demo');
+            }, 'peel-demo');
         </script>
     </section>
-
     <section class="pillar">
-        <h2>II. Logic: The XOR Sentinel</h2>
-        <p>On the <strong>Intel</strong> substrate, <code>XOR</code> acts as the sensory organ for friction.</p>
-        <div id="xor-demo" class="demo-box"></div>
-        <script>
-            new p5((p) => {
-                p.setup = () => { p.createCanvas(p.select('#xor-demo').width, 200).parent('xor-demo'); }
-                p.draw = () => {
-                    p.background(5, 7, 10); p.textAlign(p.CENTER);
-                    let friction = p.sin(p.frameCount * 0.1) > 0 ? 1 : 0;
-                    p.fill(friction ? '#ff4b2b' : '#FFD700');
-                    p.textSize(32); p.text(friction ? "FRICTION (1)" : "GROUNDED (0)", p.width/2, p.height/2);
-                    p.textSize(12); p.fill(255, 100); p.text("XOR RDX, RAX // SENSE BIT-STABILITY", p.width/2, p.height/2 + 40);
-                }
-            }, 'xor-demo');
-        </script>
+        <h2>II. Logic: XOR Friction Sensing</h2>
+        <p>On the <strong>Intel x86_64</strong> substrate, <code>XOR</code> detects the friction between the state and the invariant.</p>
+        <pre><code>; marilyn_fold.asm
+xor rbx, rdx  ; SENSE FRICTION (A ⊕ B)
+not rbx        ; THE SNAP (Inversion)
+or  rax, rbx   ; MANIFOLD COLLAPSE</code></pre>
     </section>
 </div>
 </body>
