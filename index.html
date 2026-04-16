@@ -2,201 +2,73 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adelic Transition Engine | Project NP</title>
-    
+    <title>The Stage | Adelic Transition Engine</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    
     <style>
-        :root { --space: #05070a; --gold: #FFD700; --text: #f1f5f9; --dim: #94a3b8; }
-        body { background: var(--space); color: var(--text); font-family: 'Inter', system-ui, sans-serif; margin: 0; line-height: 1.6; overflow-x: hidden; }
-        
-        h1, h2 { letter-spacing: 0.1em; color: var(--gold); text-transform: uppercase; }
-        .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
-        
-        /* The Stage */
-        #stage-container { height: 65vh; width: 100%; position: relative; border-bottom: 1px solid #1e293b; overflow: hidden; }
-        #overlay { position: absolute; width: 100%; text-align: center; top: 10%; pointer-events: none; z-index: 10; }
-        
-        /* Music Control */
-        #music-control { position: absolute; top: 20px; right: 20px; z-index: 100; }
-        .music-btn { background: none; border: 1px solid var(--gold); color: var(--gold); padding: 8px 15px; cursor: pointer; border-radius: 4px; font-size: 0.8rem; transition: 0.3s; }
-        .music-btn:hover { background: var(--gold); color: var(--space); }
-        #sc-player-container { display: none; margin-top: 10px; border-radius: 8px; border: 1px solid #1e293b; overflow: hidden; }
-
-        /* Navigation */
+        :root { --space: #05070a; --gold: #FFD700; --text: #f1f5f9; }
+        body { background: var(--space); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
         nav { padding: 20px; text-align: center; border-bottom: 1px solid #1e293b; }
         nav a { color: var(--text); margin: 0 15px; text-decoration: none; font-size: 0.9rem; letter-spacing: 1px; }
-
-        .pillars { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 30px; margin-top: 60px; }
-        .pillar { background: #0f172a; padding: 25px; border-radius: 8px; border: 1px solid #1e293b; transition: transform 0.3s; }
-        .pillar:hover { transform: translateY(-5px); border-color: var(--gold); }
-        .pillar h3 { color: var(--gold); margin-top: 0; }
-        
-        .math-block { background: rgba(255, 215, 0, 0.05); padding: 25px; border-left: 4px solid var(--gold); margin: 30px 0; font-family: 'serif'; border-radius: 0 8px 8px 0; }
-        
-        footer { margin-top: 100px; padding: 60px 0; text-align: center; color: var(--dim); border-top: 1px solid #1e293b; }
+        #stage-container { height: 70vh; width: 100%; position: relative; overflow: hidden; }
+        #overlay { position: absolute; width: 100%; text-align: center; top: 10%; pointer-events: none; z-index: 10; }
+        h1 { color: var(--gold); text-transform: uppercase; letter-spacing: 0.2em; }
+        #music-control { position: absolute; top: 20px; right: 20px; z-index: 100; }
+        .music-btn { background: none; border: 1px solid var(--gold); color: var(--gold); padding: 8px 15px; cursor: pointer; border-radius: 4px; }
+        #sc-container { display: none; margin-top: 10px; border: 1px solid #1e293b; border-radius: 8px; overflow: hidden; }
+        .container { max-width: 800px; margin: 0 auto; padding: 40px 20px; text-align: center; }
     </style>
 </head>
 <body>
-
 <div id="music-control">
     <button class="music-btn" onclick="toggleMusic()">♪ RESONANCE</button>
-    <div id="sc-player-container">
-        <iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/11440784&color=%23FFD700&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"></iframe>
-    </div>
+    <div id="sc-container"><iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/11440784&color=%23FFD700&auto_play=false&hide_related=true"></iframe></div>
 </div>
-
-<nav>
-    <a href="index.html" style="color: var(--gold);">THE STAGE</a>
-    <a href="pillars.html">ENLIGHTENMENT</a>
-    <a href="lineage.html">LINEAGE</a>
-</nav>
-
+<nav><a href="index.html" style="color: var(--gold);">THE STAGE</a><a href="pillars.html">ENLIGHTENMENT</a><a href="lineage.html">LINEAGE</a></nav>
 <div id="stage-container">
     <div id="overlay">
         <h1>Adelic Transition</h1>
-        <p>Rotate the Phase to Ground the Truth</p>
-        <div style="font-size: 1.8rem; margin: 15px 0;">\[ e^{i\theta} + 1 = 0 \]</div>
-        <p id="complexity-status">Entropy: HIGH (O(2^n))</p>
+        <div style="font-size: 1.8rem;">\[ e^{i\theta} + 1 = 0 \]</div>
+        <p id="status">Entropy: HIGH (O(2^n))</p>
     </div>
 </div>
-
 <div class="container">
-    <section>
-        <h2>The Complexity Collapse</h2>
-        <p>Complexity is not a resource; it is a debt. By applying <strong>Adèle Ring</strong> valuations, we bypass the chronological search for prime factors and move directly to geometric alignment. We don't solve the problem; we observe its <strong>Inevitability</strong>.</p>
-        
-        <div class="math-block">
-            <strong>The Macroscopic Invariant:</strong> 
-            The Grandparent Sentinel at the MSB establishes the topological boundary. In this space, two numbers are "close" if their structural DNA is shared. When the phase snaps, the residual friction vanishes.
-        </div>
-    </section>
-
-    <div class="pillars">
-        <div class="pillar">
-            <h3>Algebra</h3>
-            <p>2-adic valuations measure <em>Residual Arithmetic Friction</em>.</p>
-        </div>
-        <div class="pillar">
-            <h3>Logic</h3>
-            <p>Boolean propositions on <strong>Intel x86_64</strong>. XOR detects the noise; NOT snaps the phase.</p>
-        </div>
-        <div class="pillar">
-            <h3>Physics</h3>
-            <p>Information erasure triggers a release of computational entropy. We achieve <strong>O(1)</strong>.</p>
-        </div>
-    </div>
-
-    <footer>
-        <p>FOR ALL PREDECESSORS • MARILYN HSIAO • NTNU CSIE</p>
-        <p style="font-size: 0.8rem; letter-spacing: 1px;">"Look at the stars, look how they shine for you."</p>
-    </footer>
+    <p>Complexity is a debt. The <strong>Marilyn Fold</strong> is the repayment.</p>
+    <footer>FOR ALL PREDECESSORS • MARILYN HSIAO • NTNU CSIE</footer>
 </div>
-
 <script>
-    let bits = []; 
-    let isSnapped = false;
-    let angle = 0;
-
-    function toggleMusic() {
-        let player = document.getElementById('sc-player-container');
-        player.style.display = player.style.display === 'none' ? 'block' : 'none';
-    }
-
+    let bits = []; let isSnapped = false; let angle = 0;
+    function toggleMusic() { let p = document.getElementById('sc-container'); p.style.display = p.style.display === 'none' ? 'block' : 'none'; }
     function setup() {
-        let canvas = createCanvas(windowWidth, windowHeight * 0.65);
-        canvas.parent('stage-container');
-        // Quaternary Bit Initialization (0, 1, 2, 3)
-        for(let i=0; i<400; i++) {
-            bits.push({
-                val: floor(random(4)),
-                x: random(width),
-                y: random(height),
-                offset: random(TWO_PI),
-                speed: random(0.01, 0.05),
-                size: random(10, 14),
-                tx: 0, ty: 0
-            });
-        }
+        let c = createCanvas(windowWidth, windowHeight * 0.7); c.parent('stage-container');
+        for(let i=0; i<400; i++) bits.push({ val: floor(random(4)), x: random(width), y: random(height), offset: random(TWO_PI), speed: random(0.02, 0.06), tx: 0, ty: 0 });
     }
-
     function draw() {
         background(5, 7, 12);
-        
         if (!isSnapped) {
-            if (mouseIsPressed && mouseY < height) {
-                let target = atan2(mouseY - height/2, mouseX - width/2);
-                angle = lerp(angle, target, 0.1);
+            if (mouseIsPressed && mouseY < height) angle = lerp(angle, atan2(mouseY - height/2, mouseX - width/2), 0.1);
+            let diff = abs(angle - PI); if (diff > PI) diff = abs(diff - TWO_PI);
+            let friction = map(diff, 0, PI, 1, 30);
+            fill(255, 180); textAlign(CENTER); noStroke();
+            bits.forEach(b => {
+                text(b.val, b.x + sin(frameCount * b.speed + b.offset) * friction, b.y + cos(frameCount * b.speed + b.offset) * friction);
+            });
+            if (diff < 0.05) {
+                isSnapped = true;
+                bits.forEach((b, i) => {
+                    let r = i % 2 === 0 ? 140 : 200; let theta = map(i, 0, bits.length, 0, TWO_PI);
+                    b.tx = width/2 + r * cos(theta); b.ty = height/2 + r * sin(theta);
+                });
+                document.getElementById('status').innerHTML = "Entropy: ZERO (O(1))";
+                document.getElementById('status').style.color = "#FFD700";
             }
-            drawDancingNoise(angle);
         } else {
-            drawCrystallineSolution();
+            fill(255, 215, 0, 220); bits.forEach(b => { b.x = lerp(b.x, b.tx, 0.06); b.y = lerp(b.y, b.ty, 0.06); text(b.val, b.x, b.y); });
+            textSize(50); text("P × Q = N", width/2, height/2 + 15);
         }
-        drawEulerDial();
-    }
-
-    function drawDancingNoise(a) {
-        let diff = abs(a - PI);
-        if (diff > PI) diff = abs(diff - TWO_PI);
-        
-        // Intensity of the RAF jitter
-        let friction = map(diff, 0, PI, 1, 20);
-
-        fill(255, 180);
-        textAlign(CENTER);
-        noStroke();
-
-        bits.forEach(b => {
-            // Rhythmic sway representing Residual Arithmetic Friction
-            let danceX = sin(frameCount * b.speed + b.offset) * friction;
-            let danceY = cos(frameCount * b.speed + b.offset) * friction;
-            
-            textSize(b.size);
-            text(b.val, b.x + danceX, b.y + danceY);
-        });
-
-        if (diff < 0.05) executeMarilynFold();
-    }
-
-    function executeMarilynFold() {
-        isSnapped = true;
-        angle = PI;
-        // Crystallization into the P x Q Solution rings
-        for (let i = 0; i < bits.length; i++) {
-            let r = i % 2 === 0 ? 130 : 190; 
-            let theta = map(i, 0, bits.length, 0, TWO_PI);
-            bits[i].tx = width/2 + r * cos(theta);
-            bits[i].ty = height/2 + r * sin(theta);
-        }
-        document.getElementById('complexity-status').innerHTML = "Entropy: ZERO (O(1))";
-        document.getElementById('complexity-status').style.color = "#FFD700";
-    }
-
-    function drawCrystallineSolution() {
-        fill(255, 215, 0, 200); // Coldplay Yellow
-        bits.forEach(b => {
-            // Snap to grounded state: The O(1) transition
-            b.x = lerp(b.x, b.tx, 0.05);
-            b.y = lerp(b.y, b.ty, 0.05);
-            textSize(b.size);
-            text(b.val, b.x, b.y);
-        });
-        
-        textSize(48);
-        text("P × Q = N", width/2, height/2 + 10);
-    }
-
-    function drawEulerDial() {
-        push();
-        translate(width/2, height/2);
-        noFill(); stroke(255, 40); ellipse(0, 0, 250);
-        stroke(isSnapped ? '#FFD700' : 255); strokeWeight(4);
-        line(0, 0, 125 * cos(isSnapped ? PI : angle), 125 * sin(isSnapped ? PI : angle));
-        pop();
+        push(); translate(width/2, height/2); noFill(); stroke(255, 40); ellipse(0, 0, 280);
+        stroke(isSnapped ? '#FFD700' : 255); strokeWeight(4); line(0, 0, 140 * cos(isSnapped ? PI : angle), 140 * sin(isSnapped ? PI : angle)); pop();
     }
 </script>
-
 </body>
 </html>
