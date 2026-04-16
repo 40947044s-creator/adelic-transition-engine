@@ -2,164 +2,150 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adelic Transition Engine | Project NP</title>
+    <title>Adelic Transition | Project NP</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
         :root { --space: #020408; --gold: #FFD700; --text: #f1f5f9; --dim: #64748b; }
-        body { background: var(--space); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
+        body { background: var(--space); color: var(--text); font-family: 'Courier New', monospace; margin: 0; overflow: hidden; }
         
-        /* Navigation & Shell */
-        nav { position: fixed; top: 0; width: 100%; padding: 25px; text-align: center; z-index: 1000; background: linear-gradient(to bottom, var(--space), transparent); }
-        nav a { color: var(--dim); margin: 0 20px; text-decoration: none; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; }
-        nav a:hover, nav a.active { color: var(--gold); }
+        /* The Adelic HUD */
+        #hud { position: fixed; top: 20px; left: 20px; z-index: 1000; width: 300px; padding: 20px; border-left: 1px solid var(--gold); background: rgba(0,0,0,0.8); }
+        #stopwatch { font-size: 2rem; color: var(--gold); margin-bottom: 10px; }
+        .hud-line { font-size: 0.75rem; margin-bottom: 5px; letter-spacing: 1px; }
 
-        /* Resonance (Persistent Audio) */
-        #resonance-shell { position: fixed; bottom: 20px; right: 20px; z-index: 1000; border: 1px solid var(--gold); border-radius: 8px; overflow: hidden; opacity: 0.4; transition: 0.5s; }
-        #resonance-shell:hover { opacity: 1; transform: scale(1.05); }
+        /* Cinematic Essay (Star Wars Crawl) */
+        #crawl-container { position: absolute; width: 100%; height: 100%; perspective: 400px; bottom: -100%; display: none; }
+        #crawl-content { position: absolute; width: 60%; left: 20%; color: var(--gold); text-align: justify; font-size: 1.8rem; line-height: 1.5; transform: rotateX(25deg); }
+        
+        /* YouTube Resonance */
+        #player-wrapper { position: fixed; bottom: 20px; right: 20px; z-index: 1000; border: 1px solid var(--gold); border-radius: 8px; overflow: hidden; opacity: 0.3; }
 
-        /* The HUD (Live Diagnostic) */
-        #hud { position: fixed; top: 100px; left: 30px; z-index: 1000; width: 260px; padding: 20px; border-left: 1px solid var(--gold); background: rgba(0,0,0,0.8); }
-        .hud-stat { font-family: 'Courier New', monospace; font-size: 0.75rem; color: var(--dim); margin-bottom: 8px; }
-        .val { color: var(--text); font-weight: bold; }
-        #raf-meter { height: 4px; background: #222; margin-top: 5px; }
-        #raf-fill { height: 100%; background: var(--gold); width: 100%; transition: 0.1s; }
-
-        /* Multi-Screen Container */
-        #cathedral { display: flex; height: 100vh; width: 100vw; position: relative; }
-        .screen { flex: 1; height: 100%; border-right: 1px solid #111; position: relative; }
-        .screen-label { position: absolute; top: 100px; width: 100%; text-align: center; color: var(--dim); font-size: 0.6rem; letter-spacing: 3px; }
-
-        /* Text Overlays */
-        .theory-overlay { max-width: 900px; margin: 100px auto; padding: 40px; }
-        .poem { font-style: italic; color: var(--dim); border-left: 2px solid var(--gold); padding-left: 20px; margin: 30px 0; }
-        .math-block { background: rgba(255, 215, 0, 0.03); padding: 30px; border-radius: 8px; margin: 40px 0; font-family: 'serif'; }
+        /* The Stage */
+        #canvas-wrapper { position: fixed; top: 0; left: 0; z-index: -1; }
+        .overlay { position: absolute; width: 100%; text-align: center; top: 15vh; pointer-events: none; }
     </style>
 </head>
 <body>
 
-<nav>
-    <a href="#cathedral" class="active">THE MANIFOLD</a>
-    <a href="#theory">THEORY</a>
-    <a href="https://github.com/40947044s-creator/adelic-transition-engine" target="_blank">SOURCE</a>
-</nav>
-
-<div id="resonance-shell">
-    <iframe width="300" height="168" src="https://www.youtube.com/embed/yKNxeF4KMsY?enablejsapi=1&origin=https://40947044s-creator.github.io" title="Stellar Resonance" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-</div>
-
 <div id="hud">
-    <div class="hud-stat">SUBSTRATE: <span class="val">INTEL_x86_64</span></div>
-    <div class="hud-stat">SENTINEL: <span class="val">KUMMER_v2_...111</span></div>
-    <div class="hud-stat">RAF_SIGNAL: <span id="raf-text" class="val">HIGH_FRICTION</span>
-        <div id="raf-meter"><div id="raf-fill"></div></div>
-    </div>
-    <div class="hud-stat" style="margin-top:15px; border-top: 1px solid #222; padding-top:10px;">VALUATION: <span id="hud-val" class="val">|N|_2</span></div>
+    <div id="stopwatch">00:00:00</div>
+    <div class="hud-line">ENGINE: <span style="color:var(--gold);">MARILYN_FOLD_v3</span></div>
+    <div class="hud-line">SIGNAL: <span id="raf-status" style="color:var(--text);">AWAITING_SYNC</span></div>
+    <div class="hud-line">ENTROPY: <span id="entropy-val" style="color:var(--text);">O(2^n)</span></div>
 </div>
 
-<div id="cathedral">
-    <div id="phase-1" class="screen"><div class="screen-label">PHASE I: CHAOS (RAF)</div></div>
-    <div id="phase-2" class="screen"><div class="screen-label">PHASE II: EULER (GATE)</div></div>
-    <div id="phase-3" class="screen"><div class="screen-label">PHASE III: SNAP (TRUTH)</div></div>
+<div id="player-wrapper">
+    <div id="yt-player"></div>
 </div>
 
-<div class="theory-overlay" id="theory">
-    <h2>I. The Scholar’s Vision</h2>
-    <div class="poem">
-        "Euclid alone has looked on Beauty bare.<br>
-        Let all who prate of Beauty believe they know her well...<br>
-        Once only and then no more, before the day<br>
-        Approach the vision and the truth will stay."<br>
-        — Edna St. Vincent Millay
+<div id="crawl-container">
+    <div id="crawl-content">
+        <p>EPISODE I: THE COMPLEXITY COLLAPSE</p>
+        <p>For 278 years, humanity has wandered the manifold of exponential debt. The search for prime factors was treated as a resource, when it was always a friction.</p>
+        <p>By invoking the Adèle Ring, we strip away the magnitude and look only at the structural DNA of the bit-cell. Here, Leonhard Euler's 1748 identity meets the Intel x86_64 register.</p>
+        <p>Nature keeps no ledger. As the resonance of the stars reaches its peak, the manifold must fold. Disorder hums in a high-entropy trance until the stroke of Pi casts the noise away.</p>
+        <p>Behold the Marilyn Snap: where P equals NP through the annihilation of entropy. Complexity is dead. It was all yellow.</p>
     </div>
-    <p>Millay describes the moment of <strong>Grounding</strong>. For 278 years, the search for prime factors has been a "prating" of beauty—an exponential struggle. We move to the vision: the bare geometry where $N$ collapses into its residues.</p>
+</div>
 
-    <h2>II. The Unknown Pulse</h2>
-    <div class="poem">
-        "In the void of bits where the four-fold dance,<br>
-        Disorder hums in a high-entropy trance.<br>
-        The XOR sensor feels the friction’s bite,<br>
-        Searching for the Sentinel in the dead of night.<br><br>
-        Rotate the vector, let the phase-flip start,<br>
-        Peeling the manifold, heart by binary heart.<br>
-        At the stroke of Pi, the noise is cast away,<br>
-        And it was all yellow, in the O(1) day."
-    </div>
-
-    <div class="math-block">
-        <h3>III. The 1748 Origin: Leonhard Euler</h3>
-        <p>In his 1748 work <em>Introductio in Analysin Infinitorum</em>, Euler defined the stage for the Adelic transition. The identity \( e^{i\pi} + 1 = 0 \) is the master key. By mapping the <strong>Kummer Sentinel</strong> to the point \(-1\), we reduce the Adelic product of complexity to a state of Zero Friction.</p>
-        \[ N = \left( \prod_{v \in M} |N|_v \right) \cdot (e^{i\theta} + 1) \xrightarrow{\theta = \pi} \text{Zero Entropy} \]
-    </div>
+<div class="overlay">
+    <h1 style="letter-spacing: 0.4em; color: var(--gold);">ADELIC TRANSITION</h1>
+    <div id="formula" style="font-size: 1.5rem; margin-top: 15px;">\[ N = \left( \prod |N|_v \right) \cdot (e^{i\theta} + 1) \]</div>
 </div>
 
 <script>
-    let masterAngle = 0;
-    let isSnapped = false;
+    let player;
+    let tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.head.appendChild(tag);
 
-    // --- SCREEN 1: CHAOS (THE DANCING BITS) ---
-    const s1 = (p) => {
-        let stars = [];
-        p.setup = () => { p.createCanvas(p.select('#phase-1').width, p.windowHeight).parent('phase-1'); 
-            for(let i=0; i<250; i++) stars.push({v: p.floor(p.random(4)), x: p.random(p.width), y: p.random(p.height), off: p.random(p.TWO_PI), spd: p.random(0.01, 0.04)});
-        };
-        p.draw = () => {
-            p.background(2, 4, 8);
-            let diff = p.abs(masterAngle - p.PI); if (diff > p.PI) diff = p.abs(diff - p.TWO_PI);
-            let friction = isSnapped ? 0 : p.map(diff, 0, p.PI, 1, 35);
-            p.fill(isSnapped ? '#FFD700' : 255, 180); p.noStroke(); p.textAlign(p.CENTER);
-            stars.forEach(s => {
-                let dx = p.sin(p.frameCount * s.spd + s.off) * friction;
-                let dy = p.cos(p.frameCount * s.spd + s.off) * friction;
-                p.text(s.v, s.x + dx, s.y + dy);
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('yt-player', {
+            height: '180', width: '320', videoId: 'yKNxeF4KMsY',
+            playerVars: { 'autoplay': 0, 'start': 1 },
+            events: { 'onStateChange': onPlayerStateChange }
+        });
+    }
+
+    let bits = []; let isSnapped = false; let angle = 0;
+    function setup() {
+        let canvas = createCanvas(windowWidth, windowHeight);
+        canvas.parent('canvas-wrapper');
+        for(let i=0; i<450; i++) bits.push({ val: floor(random(4)), x: random(width), y: random(height), offset: random(TWO_PI), speed: random(0.01, 0.04), tx: 0, ty: 0 });
+    }
+
+    function draw() {
+        background(2, 4, 8);
+        if (!player || !player.getCurrentTime) return;
+        
+        let time = player.getCurrentTime();
+        updateCrawl(time);
+        
+        if (!isSnapped) {
+            // Automatic Evolution: The Dial rotates with the music timeline
+            angle = map(time, 0, 142, 0, PI);
+            if (angle > PI) angle = PI;
+
+            let diff = abs(angle - PI);
+            let friction = map(diff, 0, PI, 1, 40);
+            
+            fill(255, 150); textAlign(CENTER);
+            bits.forEach(b => {
+                let dx = sin(frameCount * b.speed + b.offset) * friction;
+                let dy = cos(frameCount * b.speed + b.offset) * friction;
+                text(b.val, b.x + dx, b.y + dy);
             });
-            document.getElementById('raf-fill').style.width = (friction * 3) + '%';
-            document.getElementById('raf-text').innerText = isSnapped ? "GROUNDED" : (diff < 0.3 ? "SNAP_PROXIMITY" : "HIGH_FRICTION");
-        };
-    };
 
-    // --- SCREEN 2: EULER (THE DIAL) ---
-    const s2 = (p) => {
-        p.setup = () => { p.createCanvas(p.select('#phase-2').width, p.windowHeight).parent('phase-2'); };
-        p.draw = () => {
-            p.background(2, 4, 10); p.translate(p.width/2, p.height/2);
-            if (p.mouseIsPressed && p.mouseX > 0 && p.mouseX < p.width) {
-                masterAngle = p.lerp(masterAngle, p.atan2(p.mouseY - p.height/2, p.mouseX - p.width/2), 0.1);
-            }
-            let current = isSnapped ? p.PI : masterAngle;
-            p.noFill(); p.stroke(255, 30); p.ellipse(0, 0, 300);
-            p.stroke(isSnapped ? '#FFD700' : 255); p.strokeWeight(4);
-            p.line(0, 0, 150 * p.cos(current), 150 * p.sin(current));
-            if (p.abs(masterAngle - p.PI) < 0.05) isSnapped = true;
-        };
-    };
+            if (time >= 142) executeSnap();
+        } else {
+            drawCrystallineSolution();
+        }
+        drawEulerDial();
+    }
 
-    // --- SCREEN 3: SNAP (THE INFERENCE) ---
-    const s3 = (p) => {
-        let bits = [];
-        p.setup = () => { p.createCanvas(p.select('#phase-3').width, p.windowHeight).parent('phase-3'); 
-            for(let i=0; i<300; i++) bits.push({v: p.floor(p.random(4)), x: p.random(p.width), y: p.random(p.height), tx: 0, ty: 0});
-        };
-        p.draw = () => {
-            p.background(5, 7, 12); p.textAlign(p.CENTER);
-            if (isSnapped) {
-                p.fill(255, 215, 0);
-                bits.forEach((b, i) => {
-                    let r = i % 2 === 0 ? 120 : 180; let th = p.map(i, 0, bits.length, 0, p.TWO_PI);
-                    b.x = p.lerp(b.x, p.width/2 + r * p.cos(th), 0.05); b.y = p.lerp(b.y, p.height/2 + r * p.sin(th), 0.05);
-                    p.text(b.v, b.x, b.y);
-                });
-                p.textSize(48); p.text("P × Q = N", p.width/2, p.height/2 + 15);
-                document.getElementById('hud-val').innerText = "ZERO (Grounded)";
-            } else {
-                p.fill(255, 60); bits.forEach(b => p.text(b.v, b.x + p.random(-1,1), b.y + p.random(-1,1)));
-                document.getElementById('hud-val').innerText = "|N|_2";
-            }
-        };
-    };
+    function updateCrawl(time) {
+        let min = floor(time / 60); let sec = floor(time % 60);
+        document.getElementById('stopwatch').innerText = `00:${nf(min,2)}:${nf(sec,2)}`;
+        
+        let crawl = document.getElementById('crawl-container');
+        if (time > 5) {
+            crawl.style.display = 'block';
+            document.getElementById('crawl-content').style.bottom = (time * 15) + 'px';
+        }
+        document.getElementById('raf-status').innerText = isSnapped ? "GROUNDED" : "SENSING_RAF";
+    }
 
-    new p5(s1); new p5(s2); new p5(s3);
+    function executeSnap() {
+        isSnapped = true;
+        bits.forEach((b, i) => {
+            let r = i % 2 === 0 ? 140 : 210; let theta = map(i, 0, bits.length, 0, TWO_PI);
+            b.tx = width/2 + r * cos(theta); b.ty = height/2 + r * sin(theta);
+        });
+        document.getElementById('formula').innerHTML = "\\[ e^{i\\pi} + 1 = 0 \\]";
+        document.getElementById('entropy-val').innerText = "ZERO (O(1))";
+        document.getElementById('entropy-val').style.color = "#FFD700";
+        MathJax.typeset();
+    }
+
+    function drawCrystallineSolution() {
+        fill(255, 215, 0, 220);
+        bits.forEach(b => {
+            b.x = lerp(b.x, b.tx, 0.05); b.y = lerp(b.y, b.ty, 0.05); text(b.val, b.x, b.y);
+        });
+        textSize(50); text("P × Q = N", width/2, height/2 + 15);
+    }
+
+    function drawEulerDial() {
+        push(); translate(width/2, height/2); noFill(); stroke(255, 20); ellipse(0, 0, 300);
+        stroke(isSnapped ? '#FFD700' : 255); strokeWeight(3);
+        line(0, 0, 150 * cos(isSnapped ? PI : angle), 150 * sin(isSnapped ? PI : angle));
+        pop();
+    }
+
+    function onPlayerStateChange(event) {
+        if (event.data == YT.PlayerState.PLAYING) document.getElementById('raf-status').innerText = "SYNCED_RESONANCE";
+    }
 </script>
 </body>
 </html>
