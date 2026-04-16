@@ -2,64 +2,64 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Pillars | Adelic Transition Engine</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
-        :root { --space: #05070a; --gold: #FFD700; --text: #f1f5f9; --dim: #94a3b8; }
-        body { background: var(--space); color: var(--text); font-family: 'Inter', system-ui, sans-serif; margin: 0; line-height: 1.6; }
+        :root { --space: #05070a; --gold: #FFD700; --text: #f1f5f9; }
+        body { background: var(--space); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; line-height: 1.6; }
         nav { padding: 20px; text-align: center; border-bottom: 1px solid #1e293b; }
-        nav a { color: var(--text); margin: 0 15px; text-decoration: none; font-size: 0.9rem; letter-spacing: 1px; }
-        nav a.active { color: var(--gold); border-bottom: 1px solid var(--gold); }
-        .container { max-width: 800px; margin: 0 auto; padding: 60px 20px; }
-        h1 { color: var(--gold); text-transform: uppercase; letter-spacing: 0.2em; text-align: center; margin-bottom: 60px; }
-        .pillar { margin-bottom: 80px; padding-bottom: 40px; border-bottom: 1px solid #1e293b; }
-        h2 { color: var(--gold); border-left: 3px solid var(--gold); padding-left: 15px; margin-bottom: 25px; }
-        .math-block { background: rgba(255, 215, 0, 0.03); padding: 30px; border-radius: 8px; margin: 20px 0; font-family: 'serif'; }
-        code { background: #0f172a; padding: 2px 6px; border-radius: 4px; color: #4ade80; }
-        pre { background: #0f172a; padding: 20px; border-radius: 8px; border: 1px solid #1e293b; overflow-x: auto; color: #f1f5f9; }
+        nav a { color: var(--text); margin: 0 15px; text-decoration: none; }
+        .container { max-width: 900px; margin: 0 auto; padding: 60px 20px; }
+        .pillar { margin-bottom: 100px; padding: 40px; background: #0f172a; border-radius: 12px; border: 1px solid #1e293b; }
+        h2 { color: var(--gold); text-transform: uppercase; margin-top: 0; }
+        .demo-box { height: 200px; width: 100%; background: #05070a; margin: 20px 0; border-radius: 8px; position: relative; overflow: hidden; }
+        pre { background: #05070a; padding: 15px; border-radius: 8px; color: #4ade80; font-size: 0.9rem; }
     </style>
 </head>
 <body>
-
-<nav>
-    <a href="index.html">THE STAGE</a>
-    <a href="pillars.html" class="active">ENLIGHTENMENT</a>
-    <a href="lineage.html">LINEAGE</a>
-</nav>
-
+<nav><a href="index.html">THE STAGE</a><a href="pillars.html" style="color: var(--gold);">ENLIGHTENMENT</a><a href="lineage.html">LINEAGE</a></nav>
 <div class="container">
-    <h1>The Three Pillars</h1>
-
     <section class="pillar">
-        <h2>I. Algebra: 2-adic Valuation</h2>
-        <p>In the **Ring of Adèles**, complexity is revealed as <strong>Residual Arithmetic Friction (RAF)</strong>—the geometric distance between local bit-states and the global invariant.</p>
-        <div class="math-block">
-            \[ |x|_2 = 2^{-v_2(x)} \]
-            We do not measure magnitude; we measure <em>structural proximity</em>. If a bit-cell aligns with the Grandparent Sentinel, friction disappears. The solution is the state of lowest possible valuation.
-        </div>
+        <h2>I. Algebra: 2-adic Peeling</h2>
+        <p>Complexity is a fractal tree of choices. Adelic math "peels" the manifold until only the trunk remains.</p>
+        <div id="p-adic-demo" class="demo-box"></div>
+        <script>
+            new p5((p) => {
+                p.setup = () => { p.createCanvas(p.select('#p-adic-demo').width, 200).parent('p-adic-demo'); }
+                p.draw = () => {
+                    p.background(5, 7, 10); p.stroke(255, 50);
+                    let angle = p.map(p.mouseX, 0, p.width, 0, p.PI/2);
+                    p.translate(p.width/2, p.height); p.branch(60, angle);
+                }
+                p.branch = (h, a) => {
+                    p.line(0,0,0,-h); p.translate(0,-h);
+                    if(h > 10) {
+                        p.push(); p.rotate(a); p.branch(h*0.7, a); p.pop();
+                        p.push(); p.rotate(-a); p.branch(h*0.7, a); p.pop();
+                    }
+                }
+            }, 'p-adic-demo');
+        </script>
     </section>
 
     <section class="pillar">
-        <h2>II. Logic: Boolean Snap</h2>
-        <p>This engine is physicalized on <strong>Intel x86_64</strong> hardware. The <strong>Marilyn Fold</strong> is not a calculation, but a sequence of Boolean propositions that detect and eliminate friction.</p>
-        <pre><code>; The Boolean Proposition in marilyn_fold.asm
-xor rbx, rdx  ; 1. SENSE FRICTION (A ⊕ B)
-jz .grounded   ; 2. IF ALIGNED: PASS
-not rbx        ; 3. THE SNAP: INVERT DISORDER
-or  rax, rbx   ; 4. THE MANIFOLD COLLAPSE</code></pre>
-        <p>The <code>XOR</code> operator serves as our sensory organ, detecting misalignment against the MSB Invariant.</p>
-    </section>
-
-    <section class="pillar">
-        <h2>III. Physics: O(1) Entropy</h2>
-        <p>Traditional search grows exponentially ($O(2^n)$) because it keeps a ledger of failed attempts. Our transition operates in <strong>$O(1)$</strong> because we utilize the principle of information erasure.</p>
-        <div class="math-block">
-            \[ \text{Entropy Collapse} \implies \text{Information Annihilation} \]
-            By executing <code>xor rdx, rdx</code>, the system resets its entropy and "forgets" the complexity of the past. Nature keeps no ledger; the system simply rests in its grounded state.
-        </div>
+        <h2>II. Logic: The XOR Sentinel</h2>
+        <p>On the <strong>Intel</strong> substrate, <code>XOR</code> acts as the sensory organ for friction.</p>
+        <div id="xor-demo" class="demo-box"></div>
+        <script>
+            new p5((p) => {
+                p.setup = () => { p.createCanvas(p.select('#xor-demo').width, 200).parent('xor-demo'); }
+                p.draw = () => {
+                    p.background(5, 7, 10); p.textAlign(p.CENTER);
+                    let friction = p.sin(p.frameCount * 0.1) > 0 ? 1 : 0;
+                    p.fill(friction ? '#ff4b2b' : '#FFD700');
+                    p.textSize(32); p.text(friction ? "FRICTION (1)" : "GROUNDED (0)", p.width/2, p.height/2);
+                    p.textSize(12); p.fill(255, 100); p.text("XOR RDX, RAX // SENSE BIT-STABILITY", p.width/2, p.height/2 + 40);
+                }
+            }, 'xor-demo');
+        </script>
     </section>
 </div>
-
 </body>
 </html>
