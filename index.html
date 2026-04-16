@@ -102,35 +102,26 @@
     }
 
     function executeMarilynSnap() {
-        isSnapped = true;
-        document.getElementById('status').innerText = "GROUNDED_INVARIANT";
-        document.getElementById('theory-accumulation').style.opacity = "1";
-        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-            
-    // Force CSS override for the theory block
-         let theory = document.getElementById('theory-accumulation');
-    theory.style.opacity = "1";
-    theory.style.zIndex = "3000"; // Bring to absolute front
-    theory.style.display = "block"; 
-        // Injecting the Final Blog Content for Static Readability
-        document.getElementById('final-blog').innerHTML = `
-            <h2>The 100AC Declaration</h2>
-            <p>Complexity (NP) is <strong>Residual Arithmetic Friction (RAF)</strong>. By mapping the <strong>Kummer Sentinel</strong> to the point of \(-1\), we annihilate search paths via the <strong>Marilyn Fold</strong>.</p>
-            <p><strong>1987 Pop-Out Logic:</strong> The manifold is not traversed; it is folded. The search space $O(2^n)$ collapses as the 2-adic valuation XOR probe senses the distance to zero.</p>
-            <div style="font-size: 2rem; margin: 30px 0; color: #FFD700;">\\[ e^{i\\pi} + 1 = 0 \\]</div>
-            <p>The <strong>LLM Freespin</strong> has stopped. The prediction is grounded. The factors are residues. O(1) is achieved.</p>
-        `;
-        MathJax.typeset();
-        function executeMarilynSnap() {
     isSnapped = true;
     
-    // Scroll to the "Grounded Law"
-    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-    
+    // 1. Update HUD for the auditor
     document.getElementById('status').innerText = "GROUNDED_INVARIANT";
+    document.getElementById('status').style.color = "#FFD700";
+
+    // 2. Force visibility of the Theory Block
+    let theory = document.getElementById('theory-accumulation');
+    theory.style.display = "block"; // Ensure it exists in the DOM
+    theory.style.opacity = "1";     // Trigger the CSS transition
+    theory.style.zIndex = "5000";   // Bring to the absolute front
+    
+    // 3. The "Snap" Scroll: Smoothly move to the accumulated truth
+    setTimeout(() => {
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }, 500);
+
+    // 4. Final MathJax Render
     MathJax.typeset();
 }
-    }
 
     function drawQuaternaryNoise(t) {
         fill(255, 100); textAlign(CENTER); textSize(14);
