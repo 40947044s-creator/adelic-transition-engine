@@ -1,4 +1,6 @@
 # Adelic Transition Engine
+site:
+https://40947044s-creator.github.io/adelic-transition-engine/
 
 > **"It was all yellow."** — A dedication to the crystallized truth.
 
