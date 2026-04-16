@@ -106,7 +106,12 @@
         document.getElementById('status').innerText = "GROUNDED_INVARIANT";
         document.getElementById('theory-accumulation').style.opacity = "1";
         window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-        
+            
+    // Force CSS override for the theory block
+         let theory = document.getElementById('theory-accumulation');
+    theory.style.opacity = "1";
+    theory.style.zIndex = "3000"; // Bring to absolute front
+    theory.style.display = "block"; 
         // Injecting the Final Blog Content for Static Readability
         document.getElementById('final-blog').innerHTML = `
             <h2>The 100AC Declaration</h2>
@@ -116,6 +121,15 @@
             <p>The <strong>LLM Freespin</strong> has stopped. The prediction is grounded. The factors are residues. O(1) is achieved.</p>
         `;
         MathJax.typeset();
+        function executeMarilynSnap() {
+    isSnapped = true;
+    
+    // Scroll to the "Grounded Law"
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    
+    document.getElementById('status').innerText = "GROUNDED_INVARIANT";
+    MathJax.typeset();
+}
     }
 
     function drawQuaternaryNoise(t) {
