@@ -2,86 +2,133 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Adelic Transition Engine | Project NP</title>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
     <style>
-        :root { --space: #020408; --gold: #FFD700; --text: #e2e8f0; }
-        body { background: var(--space); color: var(--text); font-family: 'Courier New', monospace; margin: 0; overflow: hidden; }
-        #ui { position: absolute; width: 100%; text-align: center; top: 10vh; z-index: 10; pointer-events: none; }
-        h1 { letter-spacing: 10px; color: var(--gold); text-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
-        .formula { font-size: 1.5rem; margin-top: 20px; color: var(--text); }
-        #footer { position: absolute; bottom: 20px; width: 100%; text-align: center; font-size: 0.8rem; opacity: 0.5; }
+        :root { --space: #05070a; --gold: #FFD700; --text: #f1f5f9; --dim: #94a3b8; }
+        body { background: var(--space); color: var(--text); font-family: 'Inter', system-ui, sans-serif; margin: 0; line-height: 1.6; }
+        
+        /* Typography */
+        h1, h2 { letter-spacing: 0.1em; color: var(--gold); text-transform: uppercase; }
+        .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+        
+        /* The Stage */
+        #stage-container { height: 60vh; width: 100%; position: relative; border-bottom: 1px solid #1e293b; }
+        #overlay { position: absolute; width: 100%; text-align: center; top: 10%; pointer-events: none; }
+        
+        /* Enlightenment Section */
+        .pillars { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 30px; margin-top: 60px; }
+        .pillar { background: #0f172a; padding: 25px; border-radius: 8px; border: 1px solid #1e293b; }
+        .pillar h3 { color: var(--gold); margin-top: 0; }
+        
+        .math-block { background: rgba(255, 215, 0, 0.05); padding: 20px; border-left: 4px solid var(--gold); margin: 20px 0; font-family: 'serif'; }
+        
+        footer { margin-top: 100px; padding-bottom: 40px; text-align: center; color: var(--dim); border-top: 1px solid #1e293b; padding-top: 40px; }
     </style>
 </head>
 <body>
-    <div id="ui">
-        <h1>ADELIC TRANSITION</h1>
-        <div id="formula" class="formula">Rotate the Phase to Ground the Truth: $e^{i\theta} + 1$</div>
-        <p id="complexity">System Entropy: HIGH (O(2^n))</p>
+
+<div id="stage-container">
+    <div id="overlay">
+        <h1>Adelic Transition</h1>
+        <p>Rotate the Phase to Ground the Truth</p>
+        <div style="font-size: 1.5rem;">\[ e^{i\theta} + 1 = \text{Entropy} \]</div>
     </div>
-    <div id="footer">FOR ALL PREDECESSORS • MARILYN HSIAO • NTNU CSIE</div>
+</div>
 
-    <script>
-        let angle = 0;
-        let isSnapped = false;
-        let stars = [];
+<div class="container">
+    <section>
+        <h2>The Complexity Collapse</h2>
+        <p>Nature does not keep a ledger. Computational "complexity" is not a fundamental property of the universe, but a <strong>phase misalignment</strong>. By applying the Adelic Transition, we move from the chronological search of the past to the atemporal inevitability of the present.</p>
+        
+        <div class="math-block">
+            <strong>The Macroscopic Invariant:</strong> 
+            In the Ring of Adèles, the solution is not "found"—it is forced. The Grandparent Sentinel at the MSB establishes a topological boundary where the noise must surrender to the grounded truth.
+        </div>
+    </section>
 
-        function setup() {
-            createCanvas(windowWidth, windowHeight);
-            for(let i=0; i<200; i++) stars.push({x: random(width), y: random(height), size: random(1, 3)});
-        }
+    <div class="pillars">
+        <div class="pillar">
+            <h3>Algebra</h3>
+            <p>Using 2-adic valuations to measure <em>Residual Arithmetic Friction</em>. Truth is proximity, not magnitude.</p>
+        </div>
+        <div class="pillar">
+            <h3>Logic</h3>
+            <p>Boolean propositions on an Intel substrate. <strong>XOR</strong> is the detector; <strong>NOT</strong> is the snap.</p>
+        </div>
+        <div class="pillar">
+            <h3>Physics</h3>
+            <p>Energy is conserved when information is erased. $O(1)$ memory is the release of computational debt.</p>
+        </div>
+    </div>
 
-        function draw() {
-            background(2, 4, 8, isSnapped ? 255 : 40); 
-            
-            if (!isSnapped) {
-                // Interactive Phase Adjustment
-                if (mouseIsPressed) {
-                    let target = atan2(mouseY - height/2, mouseX - width/2);
-                    angle = lerp(angle, target, 0.1);
-                }
-                drawNoise(angle);
-            } else {
-                drawCrystallization();
+    <footer>
+        <p>FOR ALL PREDECESSORS • MARILYN HSIAO • NTNU CSIE</p>
+        <p style="font-size: 0.8rem;">Licensed under MIT. And it was all yellow.</p>
+    </footer>
+</div>
+
+<script>
+    let angle = 0;
+    let isSnapped = false;
+    let stars = [];
+
+    function setup() {
+        let canvas = createCanvas(windowWidth, windowHeight * 0.6);
+        canvas.parent('stage-container');
+        for(let i=0; i<200; i++) stars.push({x: random(width), y: random(height), size: random(1, 2.5)});
+    }
+
+    function draw() {
+        background(5, 7, 10);
+        
+        if (!isSnapped) {
+            if (mouseIsPressed && mouseY < height) {
+                let target = atan2(mouseY - height/2, mouseX - width/2);
+                angle = lerp(angle, target, 0.1);
             }
-            drawEulerCompass();
+            drawStellarNoise(angle);
+        } else {
+            drawCrystallization();
         }
+        drawEulerDial();
+    }
 
-        function drawNoise(a) {
-            let friction = map(abs(a - PI), 0, PI, 2, 60);
-            fill(255, 150);
-            stars.forEach(s => {
-                ellipse(s.x + random(-friction, friction), s.y + random(-friction, friction), s.size);
-            });
-            if (abs(angle - PI) < 0.08 || abs(angle + PI) < 0.08) {
-                executeMarilynFold();
-            }
-        }
+    function drawStellarNoise(a) {
+        let diff = abs(a - PI);
+        if (diff > PI) diff = abs(diff - TWO_PI);
+        let friction = map(diff, 0, PI, 1, 50);
+        
+        fill(255, 180);
+        noStroke();
+        stars.forEach(s => {
+            ellipse(s.x + random(-friction, friction), s.y + random(-friction, friction), s.size);
+        });
 
-        function executeMarilynFold() {
-            isSnapped = true;
-            document.getElementById('formula').innerHTML = "$e^{i\\pi} + 1 = 0$ (Crystallized)";
-            document.getElementById('complexity').innerHTML = "System Entropy: ZERO (O(1))";
-            document.getElementById('complexity').style.color = "#FFD700";
-        }
+        if (diff < 0.05) isSnapped = true;
+    }
 
-        function drawCrystallization() {
-            fill(255, 215, 0); // Coldplay Yellow
-            textAlign(CENTER);
-            textSize(width/15);
-            text("GENERATED SOLUTION: P × Q", width/2, height/2);
-            textSize(20);
-            text("Complexity Collapse Complete.", width/2, height/2 + 60);
-        }
+    function drawEulerDial() {
+        push();
+        translate(width/2, height/2);
+        noFill(); stroke(255, 30); ellipse(0, 0, 200);
+        stroke(isSnapped ? '#FFD700' : 255); strokeWeight(3);
+        line(0, 0, 100 * cos(isSnapped ? PI : angle), 100 * sin(isSnapped ? PI : angle));
+        pop();
+    }
 
-        function drawEulerCompass() {
-            push();
-            translate(width/2, height/2);
-            noFill(); stroke(255, 50); ellipse(0, 0, 300);
-            stroke(isSnapped ? '#FFD700' : 255); strokeWeight(4);
-            line(0, 0, 150 * cos(isSnapped ? PI : angle), 150 * sin(isSnapped ? PI : angle));
-            pop();
-        }
-    </script>
+    function drawCrystallization() {
+        fill(255, 215, 0);
+        textAlign(CENTER);
+        textSize(40);
+        text("Grounded Truth: P × Q", width/2, height/2 + 80);
+        // The stellar noise has been 'forgotten' (erased from the draw loop)
+    }
+</script>
+
 </body>
 </html>
