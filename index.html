@@ -103,24 +103,24 @@
 
     function executeMarilynSnap() {
     isSnapped = true;
-    
-    // 1. Update HUD for the auditor
     document.getElementById('status').innerText = "GROUNDED_INVARIANT";
-    document.getElementById('status').style.color = "#FFD700";
 
-    // 2. Force visibility of the Theory Block
-    let theory = document.getElementById('theory-accumulation');
-    theory.style.display = "block"; // Ensure it exists in the DOM
-    theory.style.opacity = "1";     // Trigger the CSS transition
-    theory.style.zIndex = "5000";   // Bring to the absolute front
+    // 1. ANNIHILATE THE OVERLAY: Hide the crawl to reveal the result
+    document.getElementById('crawl-stage').style.display = "none";
+
+    // 2. ACTIVATE THE GROUNDED LAW: Force the blog into view
+    let blog = document.getElementById('theory-accumulation');
+    blog.style.opacity = "1";
+    blog.style.visibility = "visible";
+    blog.style.zIndex = "9999"; // Absolute priority
     
-    // 3. The "Snap" Scroll: Smoothly move to the accumulated truth
-    setTimeout(() => {
-        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-    }, 500);
+    // 3. COLLAPSE THE DISTANCE: Auto-scroll to the conclusion
+    window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: 'smooth'
+    });
 
-    // 4. Final MathJax Render
-    MathJax.typeset();
+    MathJax.typeset(); // Final render of the Euler Identity
 }
 
     function drawQuaternaryNoise(t) {
