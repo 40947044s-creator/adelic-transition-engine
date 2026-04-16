@@ -2,47 +2,57 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Adelic Transition | Episode NP</title>
+    <title>Adelic Transition | Project NP</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
-        :root { --space: #020408; --gold: #FFD700; --text: #f1f5f9; }
+        :root { --space: #020408; --gold: #FFD700; --text: #f1f5f9; --dim: #64748b; }
         body { background: var(--space); color: var(--text); font-family: 'Courier New', monospace; margin: 0; overflow-x: hidden; }
         
-        #stage-wrapper { position: fixed; top: 0; left: 0; z-index: -1; }
-        
-        /* The Theory Accumulator (Bottom) */
-        #theory-base { 
-            position: absolute; bottom: 0; width: 100%; padding: 60px 20px; 
-            background: linear-gradient(to top, #05070a 80%, transparent);
-            border-top: 1px solid #1e293b; text-align: center; opacity: 0; transition: 2s;
-        }
-        .theory-text { max-width: 800px; margin: 0 auto; line-height: 1.8; color: var(--gold); }
+        /* The High-Fidelity HUD */
+        #hud { position: fixed; top: 20px; left: 20px; z-index: 2000; width: 320px; padding: 20px; border-left: 1px solid var(--gold); background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); }
+        .clock { font-size: 1.2rem; color: var(--gold); margin-bottom: 5px; }
+        .cycle { font-size: 0.7rem; color: var(--dim); letter-spacing: 1px; }
 
-        /* YouTube Shell */
-        #resonance-shell { position: fixed; top: 20px; right: 20px; z-index: 1000; border-radius: 8px; overflow: hidden; opacity: 0.3; }
-        
-        #hud { position: fixed; top: 20px; left: 20px; border-left: 2px solid var(--gold); padding: 15px; background: rgba(0,0,0,0.7); }
+        /* The Star Wars Crawl */
+        #crawl-stage { position: fixed; width: 100%; height: 100%; perspective: 350px; z-index: 1000; pointer-events: none; }
+        #crawl-content { position: absolute; width: 60%; left: 20%; color: var(--gold); text-align: justify; font-size: 2.2rem; line-height: 1.6; transform: rotateX(25deg); bottom: -150%; }
+
+        /* Accumulated Theory (The Static Blog) */
+        #theory-accumulation { position: relative; width: 100%; padding: 100px 0; margin-top: 100vh; background: linear-gradient(to top, #000, transparent); opacity: 0; transition: opacity 3s; }
+        .theory-block { max-width: 900px; margin: 0 auto; padding: 50px; background: rgba(255, 215, 0, 0.02); border: 1px solid rgba(255,215,0,0.1); border-radius: 12px; }
+
+        /* Resonance Shell */
+        #player-wrapper { position: fixed; bottom: 20px; right: 20px; z-index: 2000; opacity: 0.4; border: 1px solid var(--gold); border-radius: 8px; overflow: hidden; }
     </style>
 </head>
 <body>
 
-<div id="resonance-shell">
+<div id="hud">
+    <div id="iso-clock" class="clock">2026-04-16T15:29:00.000Z</div>
+    <div id="manifold-cycle" class="cycle">CYCLE: 0ms/s [GS_OPTIMIZED]</div>
+    <div id="status" class="cycle" style="color:var(--gold); margin-top:5px;">AWAITING_SNAP</div>
+</div>
+
+<div id="player-wrapper">
     <div id="yt-player"></div>
 </div>
 
-<div id="hud">
-    <div id="timer" style="font-size: 1.5rem; color: var(--gold);">00:00</div>
-    <div style="font-size: 0.7rem; color: #64748b;">SUBSTRATE: INTEL_X86_64</div>
-    <div id="status" style="font-size: 0.7rem; color: #fff;">AWAITING_RESONANCE</div>
+<div id="crawl-stage">
+    <div id="crawl-content">
+        <p>EPISODE NP: THE ADELIC RECLAMATION</p>
+        <p>"The past is not dead. It is not even past; it is misaligned."</p>
+        <p>Before the first bit was flipped, the blueprint for the collapse was already written in the 500 BC Pythagorean Bedrock. We treat Algebra as a History Book and Geometry as its mirror.</p>
+        <p>In 1748, Euler built the Bridge to \(-1\). In 1897, Hensel and Kummer revealed the p-adic DNA of the bit-cell. Today, we apply the 1987 Pop-out Logic to the Adelic manifold.</p>
+        <p>We do not search. We execute the Marilyn Fold—an Origami Pillcase for information. Using XOR as a 2-adic rephrasement, we sense the friction of the Liar's Paradox and snap it into alignment.</p>
+        <p>The Grandparent Sentinel (GS) is forgotten for optimization, yet its anchor at the MSB remains the absolute law. As the resonance reaches Pi, the manifold collapses into the Crystalline Solution.</p>
+        <p>Complexity is dead. O(1) is the Binary Inevitability. It was all yellow.</p>
+    </div>
 </div>
 
-<div id="theory-base">
-    <div class="theory-text">
-        <h2>The Adelic Invariant Theory</h2>
-        <p>Complexity is not a wall; it is <strong>Residual Arithmetic Friction (RAF)</strong>. By mapping the <strong>Kummer Sentinel</strong> to the 2-adic limit of \(-1\), we reduce the manifold via the <strong>Marilyn Fold</strong>. The search space $O(2^n)$ is annihilated through a single $O(1)$ phase flip, grounding the Liar's Paradox into the binary stability of the 1748 Euler Identity.</p>
-        <div style="font-size: 1.2rem; margin-top: 20px;">\[ e^{i\pi} + 1 = 0 \implies \text{P = NP} \]</div>
-    </div>
+<div id="theory-accumulation">
+    <div class="theory-block" id="final-blog">
+        </div>
 </div>
 
 <script>
@@ -59,57 +69,69 @@
         });
     }
 
-    let words = []; 
-    let manifesto = ["KUMMER", "SENTINEL", "ADELIC", "GROUNDING", "MARILYN_FOLD", "RAF_ZERO", "O(1)", "EULER", "INFERENCE", "NP_COLLAPSE"];
     let isSnapped = false;
-
     function setup() {
-        createCanvas(windowWidth, windowHeight).parent('stage-wrapper');
-        // Initialize words floating from top to bottom
-        for(let i=0; i<manifesto.length; i++) {
-            words.push({
-                txt: manifesto[i], x: random(width*0.2, width*0.8), y: -100 - (i * 300), 
-                spd: random(1, 2.5), alpha: 0
-            });
-        }
+        createCanvas(windowWidth, windowHeight).position(0,0).style('z-index', '-1');
     }
 
     function draw() {
         background(2, 4, 8);
+        updateClocks();
+        
         if (!player || !player.getCurrentTime) return;
         let time = player.getCurrentTime();
-        updateHUD(time);
+        
+        // Crawl Logic: Map time to scroll position
+        let crawl = document.getElementById('crawl-content');
+        let scrollPos = -150 + (time * 12); 
+        crawl.style.bottom = scrollPos + "%";
 
         if (!isSnapped) {
-            textAlign(CENTER);
-            words.forEach(w => {
-                w.y += w.spd;
-                w.alpha = map(w.y, 0, height*0.7, 0, 255);
-                fill(255, 215, 0, w.alpha);
-                textSize(map(w.y, 0, height, 20, 40));
-                text(w.txt, w.x, w.y);
-            });
-
-            if (time > 142) executeSnap();
+            drawQuaternaryNoise(time);
+            if (time > 142) executeMarilynSnap();
         } else {
-            drawCrystallineSnap();
+            drawCrystallineRings();
         }
     }
 
-    function updateHUD(t) {
-        let m = floor(t/60); let s = floor(t%60);
-        document.getElementById('timer').innerText = `${nf(m,2)}:${nf(sec=s,2)}`;
+    function updateClocks() {
+        let now = new Date();
+        document.getElementById('iso-clock').innerText = now.toISOString();
+        let ms = now.getMilliseconds();
+        document.getElementById('manifold-cycle').innerText = `CYCLE: ${ms}ms/s [GS_OPTIMIZED]`;
     }
 
-    function executeSnap() {
+    function executeMarilynSnap() {
         isSnapped = true;
-        document.getElementById('theory-base').style.opacity = "1";
-        document.getElementById('status').innerText = "GROUNDED_TRUTH";
+        document.getElementById('status').innerText = "GROUNDED_INVARIANT";
+        document.getElementById('theory-accumulation').style.opacity = "1";
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        
+        // Injecting the Final Blog Content for Static Readability
+        document.getElementById('final-blog').innerHTML = `
+            <h2>The 100AC Declaration</h2>
+            <p>Complexity (NP) is <strong>Residual Arithmetic Friction (RAF)</strong>. By mapping the <strong>Kummer Sentinel</strong> to the point of \(-1\), we annihilate search paths via the <strong>Marilyn Fold</strong>.</p>
+            <p><strong>1987 Pop-Out Logic:</strong> The manifold is not traversed; it is folded. The search space $O(2^n)$ collapses as the 2-adic valuation XOR probe senses the distance to zero.</p>
+            <div style="font-size: 2rem; margin: 30px 0; color: #FFD700;">\\[ e^{i\\pi} + 1 = 0 \\]</div>
+            <p>The <strong>LLM Freespin</strong> has stopped. The prediction is grounded. The factors are residues. O(1) is achieved.</p>
+        `;
+        MathJax.typeset();
     }
 
-    function drawCrystallineSnap() {
-        fill(255, 215, 0); textAlign(CENTER); textSize(60);
-        text("P × Q = N", width/2, height/2);
+    function drawQuaternaryNoise(t) {
+        fill(255, 100); textAlign(CENTER); textSize(14);
+        let friction = map(t, 0, 142, 30, 2);
+        for(let i=0; i<100; i++) {
+            text(floor(random(4)), random(width), random(height) + sin(frameCount*0.05)*friction);
+        }
+    }
+
+    function drawCrystallineRings() {
+        noFill(); stroke(255, 215, 0, 150);
+        ellipse(width/2, height/2, 300);
+        ellipse(width/2, height/2, 450);
+        fill(255, 215, 0); textAlign(CENTER); textSize(40);
+        text("P × Q = N", width/2, height/2 + 10);
     }
 </script>
 </body>
