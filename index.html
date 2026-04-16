@@ -19,10 +19,16 @@
         #stage-container { height: 65vh; width: 100%; position: relative; border-bottom: 1px solid #1e293b; overflow: hidden; }
         #overlay { position: absolute; width: 100%; text-align: center; top: 10%; pointer-events: none; z-index: 10; }
         
-        /* The Resonance Layer (Amusement) */
-        #resonance { margin-top: 40px; border: 1px solid #1e293b; border-radius: 12px; overflow: hidden; background: #000; }
-        
-        /* Three Pillars */
+        /* Music Control */
+        #music-control { position: absolute; top: 20px; right: 20px; z-index: 100; }
+        .music-btn { background: none; border: 1px solid var(--gold); color: var(--gold); padding: 8px 15px; cursor: pointer; border-radius: 4px; font-size: 0.8rem; transition: 0.3s; }
+        .music-btn:hover { background: var(--gold); color: var(--space); }
+        #sc-player { display: none; margin-top: 10px; border-radius: 8px; border: 1px solid #1e293b; }
+
+        /* Navigation */
+        nav { padding: 20px; text-align: center; border-bottom: 1px solid #1e293b; }
+        nav a { color: var(--text); margin: 0 15px; text-decoration: none; font-size: 0.9rem; letter-spacing: 1px; }
+
         .pillars { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 30px; margin-top: 60px; }
         .pillar { background: #0f172a; padding: 25px; border-radius: 8px; border: 1px solid #1e293b; transition: transform 0.3s; }
         .pillar:hover { transform: translateY(-5px); border-color: var(--gold); }
@@ -34,6 +40,19 @@
     </style>
 </head>
 <body>
+
+<div id="music-control">
+    <button class="music-btn" onclick="toggleMusic()">♪ RESONANCE</button>
+    <div id="sc-player">
+        <iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/11440784&color=%23FFD700&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"></iframe>
+    </div>
+</div>
+
+<nav>
+    <a href="index.html" style="color: var(--gold);">THE STAGE</a>
+    <a href="pillars.html">ENLIGHTENMENT</a>
+    <a href="lineage.html">LINEAGE</a>
+</nav>
 
 <div id="stage-container">
     <div id="overlay">
@@ -47,22 +66,18 @@
 <div class="container">
     <section>
         <h2>The Complexity Collapse</h2>
-        <p>Complexity is not a resource; it is a debt. By applying <strong>Adèle Ring</strong> valuations, we bypass the chronological search for prime factors and move directly to geometric alignment. We don't solve the problem; we observe its <strong>Inevitability</strong>.</p>
+        <p>Complexity is not a resource; it is a debt. By applying <strong>Adèle Ring</strong> valuations, we move directly to geometric alignment. We don't solve the problem; we observe its <strong>Inevitability</strong>.</p>
         
         <div class="math-block">
             <strong>The Macroscopic Invariant:</strong> 
-            The Grandparent Sentinel at the MSB establishes the topological boundary. In this space, two numbers are "close" if their structural DNA is shared. When the phase snaps, the residual friction vanishes, leaving only the grounded truth.
+            The Grandparent Sentinel at the MSB establishes the topological boundary. In this space, two numbers are "close" if their structural DNA is shared. When the phase snaps, the residual friction vanishes.
         </div>
-    </section>
-
-    <section id="resonance">
-        <iframe width="100%" height="450" src="https://www.youtube.com/embed/yKNxeF4KMsY?si=Bx01c-PAtfjl3-Pi&autoplay=0" title="Stellar Resonance" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
     </section>
 
     <div class="pillars">
         <div class="pillar">
             <h3>Algebra</h3>
-            <p>2-adic valuations measure <em>Residual Arithmetic Friction</em>. Truth is proximity within the prime bedrock.</p>
+            <p>2-adic valuations measure <em>Residual Arithmetic Friction</em>.</p>
         </div>
         <div class="pillar">
             <h3>Logic</h3>
@@ -70,7 +85,7 @@
         </div>
         <div class="pillar">
             <h3>Physics</h3>
-            <p>Information erasure triggers a release of computational entropy. We achieve <strong>O(1)</strong> through the Marilyn Fold.</p>
+            <p>Information erasure triggers a release of computational entropy. We achieve <strong>O(1)</strong>.</p>
         </div>
     </div>
 
@@ -79,42 +94,86 @@
         <p style="font-size: 0.8rem; letter-spacing: 1px;">"Look at the stars, look how they shine for you."</p>
     </footer>
 </div>
+
 <script>
-// Add these variables at the top of your script
-let targetStars = []; 
+    let angle = 0;
+    let isSnapped = false;
+    let stars = [];
 
-function executeSnap() {
-    isSnapped = true;
-    angle = PI;
-    
-    // THE AHA MOMENT: Assign each star a target to form the "Crystalline" Solution
-    for (let i = 0; i < stars.length; i++) {
-        // We arrange them in a double-ring (symbolizing P and Q)
-        let r = i % 2 === 0 ? 120 : 180; 
-        let theta = map(i, 0, stars.length, 0, TWO_PI);
-        stars[i].tx = width/2 + r * cos(theta);
-        stars[i].ty = height/2 + r * sin(theta);
+    function toggleMusic() {
+        let player = document.getElementById('sc-player');
+        player.style.display = player.style.display === 'none' ? 'block' : 'none';
     }
-    
-    document.getElementById('complexity-status').innerHTML = "Entropy: ZERO \\( (O(1)) \\)";
-    document.getElementById('complexity-status').style.color = "#FFD700";
-}
 
-function drawCrystallization() {
-    fill(255, 215, 0, 180); // Coldplay Yellow
-    noStroke();
-    
-    stars.forEach(s => {
-        // The transition from Noise to Grounded Truth
-        s.x = lerp(s.x, s.tx, 0.05);
-        s.y = lerp(s.y, s.ty, 0.05);
-        ellipse(s.x, s.y, s.size * 1.5);
-    });
+    function setup() {
+        let canvas = createCanvas(windowWidth, windowHeight * 0.65);
+        canvas.parent('stage-container');
+        for(let i=0; i<300; i++) stars.push({x: random(width), y: random(height), size: random(0.5, 2.2), tx: 0, ty: 0});
+    }
 
-    textAlign(CENTER);
-    textSize(48);
-    text("P × Q = N", width/2, height/2);
-}
+    function draw() {
+        background(5, 7, 12);
+        if (!isSnapped) {
+            if (mouseIsPressed && mouseY < height) {
+                let target = atan2(mouseY - height/2, mouseX - width/2);
+                angle = lerp(angle, target, 0.08);
+            }
+            drawStellarNoise(angle);
+        } else {
+            drawCrystallization();
+        }
+        drawEulerDial();
+    }
+
+    function drawStellarNoise(a) {
+        let diff = abs(a - PI);
+        if (diff > PI) diff = abs(diff - TWO_PI);
+        let friction = map(diff, 0, PI, 1, 90);
+        
+        fill(255, 200);
+        noStroke();
+        stars.forEach(s => {
+            ellipse(s.x + random(-friction, friction), s.y + random(-friction, friction), s.size);
+        });
+
+        if (diff < 0.05) executeSnap();
+    }
+
+    function executeSnap() {
+        isSnapped = true;
+        angle = PI;
+        for (let i = 0; i < stars.length; i++) {
+            let r = i % 2 === 0 ? 120 : 180; 
+            let theta = map(i, 0, stars.length, 0, TWO_PI);
+            stars[i].tx = width/2 + r * cos(theta);
+            stars[i].ty = height/2 + r * sin(theta);
+        }
+        document.getElementById('complexity-status').innerHTML = "Entropy: ZERO (O(1))";
+        document.getElementById('complexity-status').style.color = "#FFD700";
+    }
+
+    function drawEulerDial() {
+        push();
+        translate(width/2, height/2);
+        noFill(); stroke(255, 40); ellipse(0, 0, 250);
+        stroke(isSnapped ? '#FFD700' : 255); strokeWeight(4);
+        line(0, 0, 125 * cos(isSnapped ? PI : angle), 125 * sin(isSnapped ? PI : angle));
+        pop();
+    }
+
+    function drawCrystallization() {
+        fill(255, 215, 0, 180);
+        noStroke();
+        stars.forEach(s => {
+            s.x = lerp(s.x, s.tx, 0.05);
+            s.y = lerp(s.y, s.ty, 0.05);
+            ellipse(s.x, s.y, s.size * 1.5);
+        });
+        textAlign(CENTER);
+        textSize(48);
+        text("P × Q = N", width/2, height/2);
+    }
 </script>
+
 </body>
 </html>
