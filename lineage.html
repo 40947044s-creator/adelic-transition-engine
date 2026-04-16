@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Lineage | Adelic Transition Engine</title>
+    <style>
+        :root { --space: #05070a; --gold: #FFD700; }
+        body { background: var(--space); color: #f1f5f9; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
+        nav { position: fixed; width: 100%; top: 0; padding: 20px; text-align: center; border-bottom: 1px solid #1e293b; background: var(--space); z-index: 100; }
+        nav a { color: #f1f5f9; margin: 0 15px; text-decoration: none; font-size: 0.9rem; letter-spacing: 1px; }
+        
+        .scroll-container { 
+            height: 300vh; /* Long enough for a slow scroll */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20vh;
+        }
+
+        .dedication { text-align: center; max-width: 600px; margin-bottom: 400px; }
+        h1 { color: var(--gold); letter-spacing: 0.5em; text-transform: uppercase; font-size: 1rem; }
+        
+        .name-list { list-style: none; padding: 0; text-align: center; }
+        .name-list li { 
+            font-size: 2.5rem; 
+            margin: 150px 0; 
+            opacity: 0.2; 
+            transition: opacity 0.8s, transform 0.8s;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+        }
+        
+        /* Highlight names as they enter view */
+        .name-list li.visible { opacity: 1; transform: scale(1.1); color: var(--gold); text-shadow: 0 0 30px rgba(255, 215, 0, 0.4); }
+
+        .conclusion { height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; }
+        blockquote { font-style: italic; font-size: 1.5rem; color: var(--dim); border: none; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="index.html">THE STAGE</a>
+    <a href="pillars.html">ENLIGHTENMENT</a>
+    <a href="lineage.html" style="color: var(--gold);">LINEAGE</a>
+</nav>
+
+<div class="scroll-container">
+    <div class="dedication">
+        <h1>For All Predecessors</h1>
+        <p>The time humanity doesn't understand was already spent by those who came before. We simply harvest the result.</p>
+    </div>
+
+    <ul class="name-list" id="lineage">
+        <li>Pythagoras</li>
+        <li>Euler</li>
+        <li>Kummer</li>
+        <li>Hensel</li>
+        <li>Tate</li>
+        <li>Project NP</li>
+    </ul>
+
+    <div class="conclusion">
+        <blockquote>"Look at the stars, look how they shine for you.<br>And it was all yellow."</blockquote>
+    </div>
+</div>
+
+<script>
+    // Reveal logic for the scrolling names
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            } else {
+                entry.target.classList.remove('visible');
+            }
+        });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.name-list li').forEach(li => observer.observe(li));
+</script>
+
+</body>
+</html>
