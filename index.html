@@ -79,72 +79,42 @@
         <p style="font-size: 0.8rem; letter-spacing: 1px;">"Look at the stars, look how they shine for you."</p>
     </footer>
 </div>
-
 <script>
-    let angle = 0;
-    let isSnapped = false;
-    let stars = [];
+// Add these variables at the top of your script
+let targetStars = []; 
 
-    function setup() {
-        let canvas = createCanvas(windowWidth, windowHeight * 0.65);
-        canvas.parent('stage-container');
-        for(let i=0; i<300; i++) stars.push({x: random(width), y: random(height), size: random(0.5, 2.2)});
+function executeSnap() {
+    isSnapped = true;
+    angle = PI;
+    
+    // THE AHA MOMENT: Assign each star a target to form the "Crystalline" Solution
+    for (let i = 0; i < stars.length; i++) {
+        // We arrange them in a double-ring (symbolizing P and Q)
+        let r = i % 2 === 0 ? 120 : 180; 
+        let theta = map(i, 0, stars.length, 0, TWO_PI);
+        stars[i].tx = width/2 + r * cos(theta);
+        stars[i].ty = height/2 + r * sin(theta);
     }
+    
+    document.getElementById('complexity-status').innerHTML = "Entropy: ZERO \\( (O(1)) \\)";
+    document.getElementById('complexity-status').style.color = "#FFD700";
+}
 
-    function draw() {
-        background(5, 7, 12);
-        
-        if (!isSnapped) {
-            if (mouseIsPressed && mouseY < height) {
-                let target = atan2(mouseY - height/2, mouseX - width/2);
-                angle = lerp(angle, target, 0.08);
-            }
-            drawStellarNoise(angle);
-        } else {
-            drawCrystallization();
-        }
-        drawEulerDial();
-    }
+function drawCrystallization() {
+    fill(255, 215, 0, 180); // Coldplay Yellow
+    noStroke();
+    
+    stars.forEach(s => {
+        // The transition from Noise to Grounded Truth
+        s.x = lerp(s.x, s.tx, 0.05);
+        s.y = lerp(s.y, s.ty, 0.05);
+        ellipse(s.x, s.y, s.size * 1.5);
+    });
 
-    function drawStellarNoise(a) {
-        let diff = abs(a - PI);
-        if (diff > PI) diff = abs(diff - TWO_PI);
-        let friction = map(diff, 0, PI, 1, 90);
-        
-        fill(255, 200);
-        noStroke();
-        stars.forEach(s => {
-            ellipse(s.x + random(-friction, friction), s.y + random(-friction, friction), s.size);
-        });
-
-        if (diff < 0.05) executeSnap();
-    }
-
-    function executeSnap() {
-        isSnapped = true;
-        angle = PI;
-        document.getElementById('complexity-status').innerHTML = "Entropy: ZERO (O(1))";
-        document.getElementById('complexity-status').style.color = "#FFD700";
-    }
-
-    function drawEulerDial() {
-        push();
-        translate(width/2, height/2);
-        noFill(); stroke(255, 40); ellipse(0, 0, 250);
-        stroke(isSnapped ? '#FFD700' : 255); strokeWeight(4);
-        line(0, 0, 125 * cos(isSnapped ? PI : angle), 125 * sin(isSnapped ? PI : angle));
-        pop();
-    }
-
-    function drawCrystallization() {
-        fill(255, 215, 0); // Coldplay Yellow
-        textAlign(CENTER);
-        textSize(48);
-        text("P × Q = N", width/2, height/2 + 100);
-        textSize(18);
-        text("CRITICAL ALIGNMENT ACHIEVED", width/2, height/2 + 130);
-    }
+    textAlign(CENTER);
+    textSize(48);
+    text("P × Q = N", width/2, height/2);
+}
 </script>
-
 </body>
 </html>
