@@ -2,29 +2,30 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Stage | Adelic Transition Engine</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
         :root { --space: #05070a; --gold: #FFD700; --text: #f1f5f9; }
         body { background: var(--space); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
-        nav { padding: 20px; text-align: center; border-bottom: 1px solid #1e293b; }
+        nav { padding: 20px; text-align: center; border-bottom: 1px solid #1e293b; background: var(--space); position: sticky; top: 0; z-index: 100; }
         nav a { color: var(--text); margin: 0 15px; text-decoration: none; font-size: 0.9rem; letter-spacing: 1px; }
-        #stage-container { height: 70vh; width: 100%; position: relative; overflow: hidden; }
+        #stage-container { height: 70vh; width: 100%; position: relative; overflow: hidden; border-bottom: 1px solid #1e293b; }
         #overlay { position: absolute; width: 100%; text-align: center; top: 10%; pointer-events: none; z-index: 10; }
-        h1 { color: var(--gold); text-transform: uppercase; letter-spacing: 0.2em; }
-        #music-control { position: absolute; top: 20px; right: 20px; z-index: 100; }
+        #music-control { position: absolute; top: 80px; right: 20px; z-index: 101; }
         .music-btn { background: none; border: 1px solid var(--gold); color: var(--gold); padding: 8px 15px; cursor: pointer; border-radius: 4px; }
-        #sc-container { display: none; margin-top: 10px; border: 1px solid #1e293b; border-radius: 8px; overflow: hidden; }
+        #sc-player { display: none; margin-top: 10px; border: 1px solid #1e293b; border-radius: 8px; overflow: hidden; }
         .container { max-width: 800px; margin: 0 auto; padding: 40px 20px; text-align: center; }
+        h1 { color: var(--gold); letter-spacing: 0.2em; text-transform: uppercase; }
     </style>
 </head>
 <body>
+<nav><a href="index.html" style="color: var(--gold);">THE STAGE</a><a href="pillars.html">ENLIGHTENMENT</a><a href="lineage.html">LINEAGE</a></nav>
 <div id="music-control">
     <button class="music-btn" onclick="toggleMusic()">♪ RESONANCE</button>
-    <div id="sc-container"><iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/11440784&color=%23FFD700&auto_play=false&hide_related=true"></iframe></div>
+    <div id="sc-player"><iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/11440784&color=%23FFD700&auto_play=false&hide_related=true"></iframe></div>
 </div>
-<nav><a href="index.html" style="color: var(--gold);">THE STAGE</a><a href="pillars.html">ENLIGHTENMENT</a><a href="lineage.html">LINEAGE</a></nav>
 <div id="stage-container">
     <div id="overlay">
         <h1>Adelic Transition</h1>
@@ -33,41 +34,39 @@
     </div>
 </div>
 <div class="container">
-    <p>Complexity is a debt. The <strong>Marilyn Fold</strong> is the repayment.</p>
+    <p>Nature keeps no ledger. Complexity is merely a phase misalignment.</p>
     <footer>FOR ALL PREDECESSORS • MARILYN HSIAO • NTNU CSIE</footer>
 </div>
 <script>
     let bits = []; let isSnapped = false; let angle = 0;
-    function toggleMusic() { let p = document.getElementById('sc-container'); p.style.display = p.style.display === 'none' ? 'block' : 'none'; }
+    function toggleMusic() { let p = document.getElementById('sc-player'); p.style.display = p.style.display === 'none' ? 'block' : 'none'; }
+    window.addEventListener('keydown', (e) => { if (e.key.toLowerCase() === 'h') { console.log("%c ADELIC AUDIT: RAF == 0 -> N=NP. Discuss? ", "background: #FFD700; color: #000; font-weight: bold;"); } });
     function setup() {
         let c = createCanvas(windowWidth, windowHeight * 0.7); c.parent('stage-container');
-        for(let i=0; i<400; i++) bits.push({ val: floor(random(4)), x: random(width), y: random(height), offset: random(TWO_PI), speed: random(0.02, 0.06), tx: 0, ty: 0 });
+        for(let i=0; i<400; i++) bits.push({ val: floor(random(4)), x: random(width), y: random(height), offset: random(TWO_PI), speed: random(0.02, 0.05), tx: 0, ty: 0 });
     }
     function draw() {
         background(5, 7, 12);
         if (!isSnapped) {
             if (mouseIsPressed && mouseY < height) angle = lerp(angle, atan2(mouseY - height/2, mouseX - width/2), 0.1);
             let diff = abs(angle - PI); if (diff > PI) diff = abs(diff - TWO_PI);
-            let friction = map(diff, 0, PI, 1, 30);
+            let friction = map(diff, 0, PI, 1, 25);
             fill(255, 180); textAlign(CENTER); noStroke();
-            bits.forEach(b => {
-                text(b.val, b.x + sin(frameCount * b.speed + b.offset) * friction, b.y + cos(frameCount * b.speed + b.offset) * friction);
-            });
+            bits.forEach(b => { text(b.val, b.x + sin(frameCount * b.speed + b.offset) * friction, b.y + cos(frameCount * b.speed + b.offset) * friction); });
             if (diff < 0.05) {
-                isSnapped = true;
-                bits.forEach((b, i) => {
-                    let r = i % 2 === 0 ? 140 : 200; let theta = map(i, 0, bits.length, 0, TWO_PI);
+                isSnapped = true; angle = PI;
+                bits.forEach((b, i) => { 
+                    let r = i % 2 === 0 ? 130 : 190; let theta = map(i, 0, bits.length, 0, TWO_PI);
                     b.tx = width/2 + r * cos(theta); b.ty = height/2 + r * sin(theta);
                 });
-                document.getElementById('status').innerHTML = "Entropy: ZERO (O(1))";
-                document.getElementById('status').style.color = "#FFD700";
+                document.getElementById('status').innerHTML = "Entropy: ZERO (O(1))"; document.getElementById('status').style.color = "#FFD700";
             }
         } else {
-            fill(255, 215, 0, 220); bits.forEach(b => { b.x = lerp(b.x, b.tx, 0.06); b.y = lerp(b.y, b.ty, 0.06); text(b.val, b.x, b.y); });
-            textSize(50); text("P × Q = N", width/2, height/2 + 15);
+            fill(255, 215, 0, 220); bits.forEach(b => { b.x = lerp(b.x, b.tx, 0.05); b.y = lerp(b.y, b.ty, 0.05); text(b.val, b.x, b.y); });
+            textSize(52); text("P × Q = N", width/2, height/2 + 15);
         }
-        push(); translate(width/2, height/2); noFill(); stroke(255, 40); ellipse(0, 0, 280);
-        stroke(isSnapped ? '#FFD700' : 255); strokeWeight(4); line(0, 0, 140 * cos(isSnapped ? PI : angle), 140 * sin(isSnapped ? PI : angle)); pop();
+        push(); translate(width/2, height/2); noFill(); stroke(255, 40); ellipse(0, 0, 260);
+        stroke(isSnapped ? '#FFD700' : 255); strokeWeight(4); line(0, 0, 130 * cos(isSnapped ? PI : angle), 130 * sin(isSnapped ? PI : angle)); pop();
     }
 </script>
 </body>
