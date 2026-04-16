@@ -1,7 +1,10 @@
 # Adelic Transition Engine
 site:
 https://40947044s-creator.github.io/adelic-transition-engine/
-https://soundcloud.com
+
+[https://soundcloud.com
+](https://soundcloud.com/enemy-stand-user)
+
 > **"It was all yellow."** — A dedication to the crystallized truth.
 
 This repository physicalizes the **Complexity Collapse** of $NP$ manifolds (specifically RSA-prime generation) by treating computational difficulty as **Residual Arithmetic Friction (RAF)**. 
