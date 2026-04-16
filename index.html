@@ -8,151 +8,154 @@
     <style>
         :root { --space: #020408; --gold: #FFD700; --text: #f1f5f9; --dim: #64748b; }
         body { background: var(--space); color: var(--text); font-family: 'Courier New', monospace; margin: 0; overflow-x: hidden; }
-        
         #hud { position: fixed; top: 20px; left: 20px; z-index: 2000; width: 340px; padding: 20px; border-left: 2px solid var(--gold); background: rgba(0,0,0,0.9); backdrop-filter: blur(10px); }
         .clock { font-size: 1.1rem; color: var(--gold); margin-bottom: 5px; font-weight: bold; }
         .cycle { font-size: 0.75rem; color: var(--dim); letter-spacing: 1px; text-transform: uppercase; }
-
-        #crawl-stage { position: fixed; width: 100%; height: 100%; z-index: 1000; pointer-events: none; transition: opacity 1.5s; }
+        #crawl-stage { position: fixed; width: 100%; height: 100%; z-index: 1000; pointer-events: none; }
         #crawl-content { position: absolute; width: 70%; left: 15%; color: var(--gold); text-align: justify; font-size: 1.8rem; line-height: 1.6; bottom: -150%; }
-
         #theory-accumulation { position: relative; width: 100%; padding: 100px 0; margin-top: 100vh; background: #000; opacity: 0; visibility: hidden; transition: opacity 3s; z-index: 5000; }
-        .theory-block { max-width: 900px; margin: 0 auto; padding: 60px; border: 1px solid rgba(255,215,0,0.2); border-radius: 15px; background: rgba(255,215,0,0.01); }
-
+        .theory-block { max-width: 900px; margin: 0 auto; padding: 60px; border: 1px solid rgba(255,215,0,0.2); background: rgba(255,215,0,0.01); border-radius: 15px; }
         #player-wrapper { position: fixed; bottom: 20px; right: 20px; z-index: 2000; opacity: 0.3; border: 1px solid var(--gold); border-radius: 8px; overflow: hidden; }
     </style>
 </head>
 <body>
 
 <div id="hud">
-    <div id="iso-clock" class="clock">2026-04-16T16:20:00.000Z</div>
+    <div id="iso-clock" class="clock">2026-04-16T16:30:00.000Z</div>
     <div id="manifold-cycle" class="cycle">CYCLE: 0ms/s [GS_OPTIMIZED]</div>
     <div id="status" class="cycle" style="color:var(--gold); margin-top:5px;">AWAITING_RESONANCE</div>
 </div>
 
-<div id="player-wrapper">
-    <div id="yt-player"></div>
-</div>
+<div id="player-wrapper"><div id="yt-player"></div></div>
 
 <div id="crawl-stage">
     <div id="crawl-content">
         <p style="font-size: 2.5rem; text-align: center;">EPISODE NP: THE RECLAMATION</p>
         <p>"The past is not dead. It is not even past; it is misaligned."</p>
-        <p>1748: Euler unifies the imaginary and the real. 1897: Kummer defines algebraic stability. 2026: We fold the manifold.</p>
-        <p>This is not a search. It is an Inference. We identify the Residual Arithmetic Friction (RAF) and negate the Liar Paradox.</p>
-        <p>The Grandparent Sentinel anchors the truth. Complexity collapses. The orbit is fixed.</p>
+        <p>This is the generation for the breakthrough. We fold the algebra to reveal the sky-clear truth.</p>
+        <p>1748: The Euler Bridge. 1897: The Kummer DNA. 2026: The Marilyn Snap.</p>
     </div>
 </div>
 
 <div id="theory-accumulation">
     <div class="theory-block" id="final-blog">
-        <h2 style="color: var(--gold);">The 100AC Declaration: Linear Inevitability</h2>
-        <p>We have broken the $O(2^n)$ barrier by treating complexity as **Phase Interference**. Euler’s Identity is our **Zero-Gate**:</p>
-        <div style="font-size: 2.5rem; margin: 40px 0; color: #FFD700; text-align: center;">
-            \[ e^{i\pi} + 1 = 0 \implies \text{RAF} \rightarrow 0 \]
-        </div>
-        <p>When the rotation ($\pi$) meets the noise ($+1$), the result is the absolute vacuum. The factors $P \times Q$ are the **Crystalline Residues**—the only structures that cannot be canceled because they are the identity of the system.</p>
-        <p><strong>This generation is for the breakthrough. The next generation is for the stars.</strong></p>
+        <h2 style="color: var(--gold);">The 100AC Declaration</h2>
+        <p>Complexity is <strong>Residual Arithmetic Friction (RAF)</strong>. At the stroke of Pi, the manifold is grounded.</p>
+        <div style="font-size: 2.5rem; margin: 40px 0; color: #FFD700; text-align: center;">\[ e^{i\pi} + 1 = 0 \implies P \times Q = N \]</div>
+        <p><strong>Orthogonality Achieved. The next generation looks to the stars.</strong></p>
     </div>
 </div>
 
 <script>
-    let player, isSnapped = false, bits = [];
-    let solutionParticles = [];
-    let equationString = "P × Q = N";
+let player, isSnapped = false, bits = [];
+let solutionParticles = [];
+let equationString = "P × Q = N";
+let varGold = '#FFD700';
 
-    function onYouTubeIframeAPIReady() {
-        player = new YT.Player('yt-player', {
-            height: '140', width: '240', videoId: 'yKNxeF4KMsY',
-            playerVars: { 'autoplay': 0, 'start': 1 },
-            events: { 'onStateChange': (e) => { if(e.data == 1) document.getElementById('status').innerText = "RESONANCE_LOCKED"; }}
-        });
+function onYouTubeIframeAPIReady() {
+    player = new YT.Player('yt-player', {
+        height: '140', width: '240', videoId: 'yKNxeF4KMsY',
+        playerVars: { 'autoplay': 0, 'start': 1 },
+        events: { 'onStateChange': (e) => { if(e.data == 1) document.getElementById('status').innerText = "RESONANCE_LOCKED"; }}
+    });
+}
+
+function setup() {
+    createCanvas(windowWidth, windowHeight).position(0,0).style('z-index', '-1');
+    for(let i=0; i<300; i++) bits.push({v:floor(random(4)), x:random(width), y:random(height)});
+    let startX = width / 2 - (equationString.length * 22);
+    for (let i = 0; i < equationString.length; i++) {
+        solutionParticles.push({ char: equationString[i], tx: startX + (i * 45), ty: height / 2 });
     }
+}
 
-    function setup() {
-        createCanvas(windowWidth, windowHeight).position(0,0).style('z-index', '-1');
-        // Initialize the Quaternary Bedrock
-        for(let i=0; i<300; i++) {
-            bits.push({v:floor(random(4)), x:random(width), y:random(height)});
-        }
-        let startX = width / 2 - (equationString.length * 22);
-        for (let i = 0; i < equationString.length; i++) {
-            solutionParticles.push({ char: equationString[i], tx: startX + (i * 45), ty: height / 2 });
-        }
+function draw() {
+    background(2, 4, 8);
+    updateClocks();
+    if (!player || !player.getCurrentTime) return;
+    let t = player.getCurrentTime();
+
+    if (t < 60) {
+        document.getElementById('crawl-content').style.bottom = (-150 + (t * 5)) + "%";
+        drawQuaternaryNoise(t);
+    } else if (t < 142) {
+        document.getElementById('crawl-stage').style.opacity = "0";
+        drawInferenceProbes(t);
+    } else {
+        if (!isSnapped) executeMarilynSnap();
+        drawCrystallineMigration();
     }
+}
 
-    function draw() {
-        background(2, 4, 8);
-        updateClocks();
-        if (!player || !player.getCurrentTime) return;
-        let t = player.getCurrentTime();
+/* --- THE ADELIC FOLD: RAF & ORTHOGONALITY --- */
+function drawInferenceProbes(t) {
+    textAlign(LEFT);
+    for(let i=0; i<8; i++) {
+        let y = 100 + i * 85;
+        let x = width/2 - 250;
+        let raf = noise(frameCount * 0.02, i) * 100;
+        let isAligned = raf < 35;
 
-        if (t < 60) {
-            document.getElementById('crawl-content').style.bottom = (-150 + (t * 5)) + "%";
-            drawJitter(t);
-        } else if (t < 142) {
-            document.getElementById('crawl-stage').style.opacity = "0";
-            drawInferenceProbes(t);
-        } else {
-            if (!isSnapped) executeMarilynSnap();
-            drawCrystallineMigration();
-        }
-    }
+        stroke(isAligned ? varGold : '#FF4500'); 
+        strokeWeight(isAligned ? 3 : 1);
+        line(x, y, x + 500, y); 
 
-    function drawInferenceProbes(t) {
-        textAlign(CENTER); fill(255, 215, 0, 40);
-        for(let i=0; i<5; i++) {
-            let y = 150 + i*120;
-            rect(width/2 - 150, y, 300, 80, 5);
-            fill(255, 100); textSize(12);
-            text("VALUATION_PROBE_0x" + hex(i * 1024, 4), width/2, y + 45);
-        }
-    }
-
-    function drawCrystallineMigration() {
-        noFill(); stroke(255, 215, 0, 100);
-        ellipse(width/2, height/2, 350 + sin(frameCount*0.05)*10);
+        fill(255); textSize(14);
+        text(`PRIME_MOD_LAYER_${i} | DEPTH: 2^${(i+1)*8}`, x, y - 40);
         
-        let allLocked = true;
-        bits.forEach((b, i) => {
-            let target = solutionParticles[i % solutionParticles.length];
-            b.x = lerp(b.x, target.tx, 0.03);
-            b.y = lerp(b.y, target.ty, 0.03);
-            if (dist(b.x, b.y, target.tx, target.ty) > 1) allLocked = false;
-            fill(255, 215, 0, 150); textSize(16);
-            text(b.v, b.x, b.y);
-        });
-
-        if (allLocked) {
-            textAlign(CENTER); textSize(60); fill(255, 215, 0);
-            text(equationString, width/2, height/2 + 20);
+        if (!isAligned) {
+            fill('#FF4500');
+            text(`[TENSION] RAF: ${raf.toFixed(2)} Δ | SEEKING_ORTHOGONALITY`, x, y - 15);
+            for(let j=0; j<10; j++) ellipse(x + random(500), y + random(-10, 10), 2, 2);
+        } else {
+            fill(varGold);
+            text(`[ALIGN] RAF: 0.00 Δ | MARILYN_FOLD_LOCKED`, x, y - 15);
+            rect(x + 480, y - 10, 20, 20); 
         }
     }
+}
 
-    function executeMarilynSnap() {
-        isSnapped = true;
-        document.getElementById('status').innerText = "GROUNDED_INVARIANT";
-        let blog = document.getElementById('theory-accumulation');
-        blog.style.opacity = "1"; blog.style.visibility = "visible";
-        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-        MathJax.typeset();
+function drawCrystallineMigration() {
+    noFill(); stroke(varGold, 100);
+    ellipse(width/2, height/2, 350 + sin(frameCount*0.05)*10);
+    let allLocked = true;
+    bits.forEach((b, i) => {
+        let target = solutionParticles[i % solutionParticles.length];
+        b.x = lerp(b.x, target.tx, 0.03);
+        b.y = lerp(b.y, target.ty, 0.03);
+        if (dist(b.x, b.y, target.tx, target.ty) > 1) allLocked = false;
+        fill(varGold, 150); textSize(16); text(b.v, b.x, b.y);
+    });
+    if (allLocked) {
+        textAlign(CENTER); textSize(60); fill(varGold);
+        text(equationString, width/2, height/2 + 20);
     }
+}
 
-    function drawJitter(t) {
-        fill(255, 50);
-        for(let i=0; i<50; i++) text(floor(random(4)), random(width), random(height));
-    }
+function executeMarilynSnap() {
+    isSnapped = true;
+    document.getElementById('status').innerText = "ORTHOGONALITY_ACHIEVED";
+    let blog = document.getElementById('theory-accumulation');
+    blog.style.opacity = "1"; blog.style.visibility = "visible";
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    MathJax.typeset();
+}
 
-    function updateClocks() {
-        let now = new Date();
-        document.getElementById('iso-clock').innerText = now.toISOString();
-        document.getElementById('manifold-cycle').innerText = `CYCLE: ${now.getMilliseconds()}ms/s [GS_OPTIMIZED]`;
-    }
+function drawQuaternaryNoise(t) {
+    fill(255, 50);
+    for(let i=0; i<50; i++) text(floor(random(4)), random(width), random(height));
+}
 
-    // Load YouTube API
-    let tag = document.createElement('script');
-    tag.src = "https://www.youtube.com/iframe_api";
-    document.head.appendChild(tag);
+function updateClocks() {
+    let now = new Date();
+    document.getElementById('iso-clock').innerText = now.toISOString();
+    document.getElementById('manifold-cycle').innerText = `CYCLE: ${now.getMilliseconds()}ms/s [GS_OPTIMIZED]`;
+}
+
+// Load YouTube API
+let tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+document.head.appendChild(tag);
 </script>
 </body>
 </html>
