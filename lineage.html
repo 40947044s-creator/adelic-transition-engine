@@ -8,25 +8,24 @@
         body { background: var(--space); color: #f1f5f9; font-family: 'Inter', sans-serif; margin: 0; }
         nav { position: fixed; width: 100%; top: 0; padding: 20px; text-align: center; border-bottom: 1px solid #1e293b; background: var(--space); z-index: 100; }
         nav a { color: #f1f5f9; margin: 0 15px; text-decoration: none; }
-        .scroll-stage { height: 400vh; position: relative; }
-        .name { position: sticky; top: 50%; transform: translateY(-50%); text-align: center; width: 100%; font-size: 3rem; letter-spacing: 0.4em; text-transform: uppercase; opacity: 0; transition: 1s; }
-        .name.active { opacity: 1; color: var(--gold); text-shadow: 0 0 30px rgba(255, 215, 0, 0.4); }
+        .scroll-stage { height: 450vh; display: flex; flex-direction: column; align-items: center; padding-top: 30vh; }
+        .name { font-size: 3rem; margin: 200px 0; opacity: 0.1; transition: 1.2s; letter-spacing: 0.4em; text-transform: uppercase; }
+        .name.active { opacity: 1; color: var(--gold); transform: scale(1.15); text-shadow: 0 0 40px rgba(255, 215, 0, 0.5); }
     </style>
 </head>
 <body>
 <nav><a href="index.html">THE STAGE</a><a href="pillars.html">ENLIGHTENMENT</a><a href="lineage.html" style="color: var(--gold);">LINEAGE</a></nav>
 <div class="scroll-stage">
     <div id="n1" class="name">Pythagoras</div>
-    <div id="n2" class="name" style="margin-top: 100vh;">Euler</div>
-    <div id="n3" class="name" style="margin-top: 200vh;">Hensel</div>
-    <div id="n4" class="name" style="margin-top: 300vh;">Project NP</div>
+    <div id="n2" class="name">Euler</div>
+    <div id="n3" class="name">Hensel</div>
+    <div id="n4" class="name">Tate</div>
+    <div id="n5" class="name">Project NP</div>
 </div>
 <script>
     window.addEventListener('scroll', () => {
         const scroll = window.scrollY / window.innerHeight;
-        document.querySelectorAll('.name').forEach((el, i) => {
-            el.classList.toggle('active', scroll >= i && scroll < i + 1);
-        });
+        document.querySelectorAll('.name').forEach((el, i) => { el.classList.toggle('active', scroll >= i && scroll < i + 1.2); });
     });
 </script>
 </body>
