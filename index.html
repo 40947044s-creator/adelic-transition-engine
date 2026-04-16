@@ -2,108 +2,85 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Adelic Transition Engine | Project NP</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
     <style>
-        :root { --bg: #05070a; --gold: #d4af37; --green: #4ade80; --text: #e2e8f0; }
-        body { background: var(--bg); color: var(--text); font-family: 'Courier New', monospace; margin: 0; overflow: hidden; display: flex; flex-direction: column; align-items: center; }
-        
-        #header { margin-top: 5vh; text-align: center; z-index: 10; pointer-events: none; }
-        #header h1 { font-size: 2.5rem; letter-spacing: 5px; color: var(--gold); margin-bottom: 0; }
-        #header p { font-style: italic; opacity: 0.7; }
-
-        #interaction-zone { position: absolute; bottom: 10vh; text-align: center; z-index: 10; }
-        .formula { font-size: 1.5rem; color: var(--green); margin-bottom: 20px; transition: all 0.5s; }
-        
-        /* The "Snap" Effect */
-        .snap-flash { animation: flash 0.5s ease-out; }
-        @keyframes flash { 0% { background: white; } 100% { background: transparent; } }
-        
-        .predecessors { position: absolute; left: 20px; bottom: 20px; font-size: 0.7rem; opacity: 0.4; line-height: 1.5; }
+        :root { --space: #020408; --gold: #FFD700; --text: #e2e8f0; }
+        body { background: var(--space); color: var(--text); font-family: 'Courier New', monospace; margin: 0; overflow: hidden; }
+        #ui { position: absolute; width: 100%; text-align: center; top: 10vh; z-index: 10; pointer-events: none; }
+        h1 { letter-spacing: 10px; color: var(--gold); text-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
+        .formula { font-size: 1.5rem; margin-top: 20px; color: var(--text); }
+        #footer { position: absolute; bottom: 20px; width: 100%; text-align: center; font-size: 0.8rem; opacity: 0.5; }
     </style>
 </head>
 <body>
-
-    <div id="header">
+    <div id="ui">
         <h1>ADELIC TRANSITION</h1>
-        <p>"Nature does not keep a ledger."</p>
+        <div id="formula" class="formula">Rotate the Phase to Ground the Truth: $e^{i\theta} + 1$</div>
+        <p id="complexity">System Entropy: HIGH (O(2^n))</p>
     </div>
-
-    <div id="interaction-zone">
-        <div id="formula" class="formula">Drag the vector to resolve $e^{i\theta} + 1$</div>
-        <p>Complexity Status: <span id="status">UNSTABLE (O(2^n))</span></p>
-    </div>
-
-    <div class="predecessors">
-        FOR ALL PREDECESSORS:<br>
-        PYTHAGORAS • EULER • KUMMER • HENSEL • TATE
-    </div>
+    <div id="footer">FOR ALL PREDECESSORS • MARILYN HSIAO • NTNU CSIE</div>
 
     <script>
         let angle = 0;
         let isSnapped = false;
+        let stars = [];
 
         function setup() {
             createCanvas(windowWidth, windowHeight);
+            for(let i=0; i<200; i++) stars.push({x: random(width), y: random(height), size: random(1, 3)});
         }
 
         function draw() {
-            background(5, 7, 10, 50); // Motion blur effect
-            translate(width / 2, height / 2);
-
-            // 1. Draw the "Noise" (High Entropy)
-            if (!isSnapped) {
-                drawNoise();
-            }
-
-            // 2. Draw the Euler Dial
-            drawDial();
-        }
-
-        function drawNoise() {
-            let friction = map(angle, 0, PI, 10, 100);
-            stroke(255, 50);
-            for (let i = 0; i < 50; i++) {
-                let x = random(-width/2, width/2);
-                let y = random(-height/2, height/2);
-                text(floor(random(4)), x + random(-friction, friction), y + random(-friction, friction));
-            }
-        }
-
-        function drawDial() {
-            noFill();
-            stroke(50);
-            ellipse(0, 0, 300);
-
-            // Calculate Angle based on Mouse
-            if (mouseIsPressed && !isSnapped) {
-                let targetAngle = atan2(mouseY - height / 2, mouseX - width / 2);
-                angle = lerp(angle, -targetAngle, 0.1);
-            }
-
-            // The Vector
-            stroke(isSnapped ? '#4ade80' : '#d4af37');
-            strokeWeight(4);
-            let vx = 150 * cos(-angle);
-            let vy = 150 * sin(-angle);
-            line(0, 0, vx, vy);
-
-            // The Snap Logic
-            if (abs(angle - PI) < 0.05 && !isSnapped) {
-                executeSnap();
-            }
-        }
-
-        function executeSnap() {
-            isSnapped = true;
-            angle = PI; // Force $e^{i\pi}$
-            document.body.classList.add('snap-flash');
-            document.getElementById('formula').innerHTML = "$e^{i\\pi} + 1 = 0$ (Resolved)";
-            document.getElementById('status').innerHTML = "CRYSTALLIZED (O(1))";
-            document.getElementById('status').style.color = "#4ade80";
+            background(2, 4, 8, isSnapped ? 255 : 40); 
             
-            console.log("Marilyn Fold: Phase alignment complete. Predecessor memory wiped.");
+            if (!isSnapped) {
+                // Interactive Phase Adjustment
+                if (mouseIsPressed) {
+                    let target = atan2(mouseY - height/2, mouseX - width/2);
+                    angle = lerp(angle, target, 0.1);
+                }
+                drawNoise(angle);
+            } else {
+                drawCrystallization();
+            }
+            drawEulerCompass();
+        }
+
+        function drawNoise(a) {
+            let friction = map(abs(a - PI), 0, PI, 2, 60);
+            fill(255, 150);
+            stars.forEach(s => {
+                ellipse(s.x + random(-friction, friction), s.y + random(-friction, friction), s.size);
+            });
+            if (abs(angle - PI) < 0.08 || abs(angle + PI) < 0.08) {
+                executeMarilynFold();
+            }
+        }
+
+        function executeMarilynFold() {
+            isSnapped = true;
+            document.getElementById('formula').innerHTML = "$e^{i\\pi} + 1 = 0$ (Crystallized)";
+            document.getElementById('complexity').innerHTML = "System Entropy: ZERO (O(1))";
+            document.getElementById('complexity').style.color = "#FFD700";
+        }
+
+        function drawCrystallization() {
+            fill(255, 215, 0); // Coldplay Yellow
+            textAlign(CENTER);
+            textSize(width/15);
+            text("GENERATED SOLUTION: P × Q", width/2, height/2);
+            textSize(20);
+            text("Complexity Collapse Complete.", width/2, height/2 + 60);
+        }
+
+        function drawEulerCompass() {
+            push();
+            translate(width/2, height/2);
+            noFill(); stroke(255, 50); ellipse(0, 0, 300);
+            stroke(isSnapped ? '#FFD700' : 255); strokeWeight(4);
+            line(0, 0, 150 * cos(isSnapped ? PI : angle), 150 * sin(isSnapped ? PI : angle));
+            pop();
         }
     </script>
 </body>
