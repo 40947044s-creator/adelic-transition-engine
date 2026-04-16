@@ -1,3 +1,4 @@
+LLM contents in 2026 A.D
 # Adelic Transition Engine
 site:
 https://40947044s-creator.github.io/adelic-transition-engine/
